@@ -1,0 +1,13 @@
+
+@import '~@mapbox/mapbox-gl-geocoder/dist/mapbox-gl-geocoder.css';
+@import '~@mapbox/mapbox-gl-geocoder/lib/mapbox-gl-geocoder.css';
+
+.container-zoom{
+    background-color: white;
+    bottom:50px;
+    position:fixed;
+    z-index: 999;
+}
+
+
+

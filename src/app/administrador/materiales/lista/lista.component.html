@@ -1,0 +1,99 @@
+<h1 class="titulos"> Inventario</h1>
+
+<div class="accordion" id="accordionExample">
+  <div class="card">
+    <div class="card-header bg-info" id="headingOne">
+      <h5 class="mb-0">
+        <button class="btn btn-default shadow-none text-white" type="button" data-toggle="collapse"
+          data-target="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
+          <span class="fas fa-file-download"></span> Ingreso de Material <span class="fas fa-sort-down"></span>
+        </button>
+      </h5>
+    </div>
+
+    <div id="collapseOne" class="collapse" aria-labelledby="headingOne" data-parent="#accordionExample">
+      <div class="card-body">
+        <form (ngSubmit)="guardarOactualizar()" [formGroup]="miFormulario">
+          <div class="card-body">
+            <div class="form-group">
+              <label for="codigo">Código:*</label>
+              <input formControlName="codigo" type="text" class="form-control" id="codigo" name="codigo">
+              <span *ngIf="campoNoEsValido('codigo')" class="form-text text-danger msgError">
+                Código: Campo Obligatorio
+              </span>
+            </div>
+
+            <div class="form-group">
+              <label for="apellidos">Nombre:*</label>
+              <input formControlName="nombre" type="text" class="form-control" id="nombre" name="nombre">
+              <span *ngIf="campoNoEsValido('nombre')" class="form-text text-danger msgError">
+                Nombre: Campo Obligatorio
+              </span>
+            </div>
+
+            <div class="form-group">
+              <label for="cedula">Descripción:*</label>
+              <input formControlName="descripcion" type="text" class="form-control" id="cedula" name="cedula">
+              <span *ngIf="campoNoEsValido('descripcion')" class="form-text text-danger msgError">
+                Descripcion: Campo Obligatorio
+              </span>
+            </div>
+
+            <div class="form-group">
+              <label for="cedula">Cantidad:*</label>
+              <input formControlName="cantidad" type="text" class="form-control" id="cantidad" name="cantidad">
+              <span *ngIf="campoNoEsValido('cantidad')" class="form-text text-danger msgError">
+                Cantidad: Campo Obligatorio
+              </span>
+            </div>
+          </div>
+
+          <button class="btn btn-info btn-md float-right mb-4">
+             <span class="fas fa-download"></span> Guardar
+          </button>
+
+        </form>
+      </div>
+    </div>
+  </div>
+  <div class="card">
+    <div class="card-header bg-primary" id="headingTwo">
+      <h5 class="mb-0">
+        <button class="btn btn-link collapsed shadow-none text-white" type="button" data-toggle="collapse"
+          data-target="#collapseTwo" aria-expanded="false" aria-controls="collapseTwo">
+          <span class="fas fa-list-ol"></span> Materiales <span class="fas fa-sort-down"></span>
+        </button>
+      </h5>
+    </div>
+    <div id="collapseTwo" class="collapse" aria-labelledby="headingTwo" data-parent="#accordionExample">
+      <div class="card-body">
+
+        <table class="table table-striped">
+
+          <thead>
+            <tr>
+              <th>
+                Código
+              </th>
+              <th>
+                Material
+              </th>
+              <th>
+                Descripción
+              </th>
+              <th>
+                Cantidad Disponibles
+              </th>
+            </tr>
+          </thead>
+
+          <tbody>
+
+          </tbody>
+
+        </table>
+
+      </div>
+    </div>
+  </div>
+</div>

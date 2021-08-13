@@ -1,0 +1,144 @@
+<h1 class="titulos"> {{idEdit ? 'Editar Proveedor' : 'Nuevo Proveedor'}}</h1>
+
+
+<form (ngSubmit)="guardarOactualizar()" autocomplete="of" [formGroup]="miFormulario">
+    <div class="row">
+        <div class="col-lg-5">
+            <div class="card">
+                <div class="text-white bg-primary card-header">
+                    Datos de la Empresa
+                </div>
+                <div class="card-body">
+                    <div class="form-group">
+                        <label for="nombre_empresa">Nombre de la Empresa:*</label>
+                        <input formControlName="nombre_empresa" type="text" class="form-control" id="nombre_empresa"
+                            name="nombre_empresa">
+                        <span *ngIf="campoNoEsValido('nombre_empresa')" class="form-text text-danger msgError">
+                            Nombre: Campo Obligatorio
+                        </span>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="representante">Representante Legal:*</label>
+                        <input placeholder="Nombre del representante" formControlName="representante" type="text"
+                            class="form-control" id="representante" name="representante">
+                        <span *ngIf="campoNoEsValido('representante')" class="form-text text-danger msgError">
+                            Representante: Campo Obligatorio
+                        </span>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="cedula_ruc">Cédula o Ruc:*</label>
+                        <input formControlName="cedula_ruc" type="text" class="form-control" id="cedula_ruc"
+                            name="cedula_ruc">
+                        <span *ngIf="campoNoEsValido('cedula_ruc')" class="form-text text-danger msgError">
+                            Cédula o Ruc: Debe tener 10 valores o mas
+                        </span>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="correo">Correo:*</label>
+                        <input formControlName="correo" type="text" class="form-control" id="correo" name="correo">
+                        <span *ngIf="campoNoEsValido('correo')" class="form-text text-danger msgError">
+                            Correo: Ingrese un correo válido
+                        </span>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="celular">Celular:*</label>
+                        <input formControlName="celular" type="text" class="form-control" id="celular" name="celular">
+                        <span *ngIf="campoNoEsValido('celular')" class="form-text text-danger msgError">
+                            Celular: Debe tener 10 valores
+                        </span>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="telefono_fijo">Teléfono Fijo:</label>
+                        <input formControlName="telefono_fijo" type="text" class="form-control" id="telefono_fijo"
+                            name="telefono_fijo">
+                    </div>
+
+
+                </div>
+            </div>
+        </div>
+
+        <div class="col-lg-7">
+            <div class="card">
+                <div class="text-white bg-primary card-header">
+                    Dirección de la Empresa
+                </div>
+                <div class="card-body" formGroupName="direccion">
+
+                    <div class="form-group">
+                        <label for="provincia">Provincia:*</label>
+                        <input #box (keyup)="buscarProvincia(box.value)"  formControlName="provincia" type="text" class="form-control" id="provincia"
+                            name="provincia">
+
+                        <span *ngIf="campoNoValidoDireccion('direccion.provincia')"
+                            class="form-text text-danger msgError">
+                            Provincia: Campo Obligatorio
+                        </span>
+
+                    </div>
+
+                    <div class="form-group">
+                        <label for="ciudad">Ciudad o Cantón:*</label>
+                        <input #canton (keyup)="buscarCanton(canton.value)" formControlName="ciudad" type="text" class="form-control" id="ciudad" name="ciudad">
+                        <span *ngIf="campoNoValidoDireccion('direccion.ciudad')" class="form-text text-danger msgError">
+                            Ciudad: Campo Obligatorio
+                        </span>
+
+                    </div>
+
+                    <div id="geocoder" class="geocoder"></div>
+
+                    <div style="width:100%;height:350px" #mapa>
+
+                    </div>
+
+                    <div style="width:100%">
+                        <div>
+
+                            <div class="float-left">
+                                Zoom:{{zoomLevel | number:'2.0-1'}}
+                            </div>
+
+                            <div class="float-right">
+                                Lng,Lat: [{{center[0] | number:'2.4-4' }}, {{center[1] | number:'2.4-4'}}]
+                            </div>
+
+                            <input 
+                            style="width:100%" 
+                            type="range" 
+                            class="form-range"
+                            [value]="zoomLevel"
+                            min="0"
+                            max="18"
+                            #zoomInput
+                            (input)="zoomCambio(zoomInput.value)"
+                            >
+
+                            <button (click)="zoomOut()" type="button" class="btn btn-primary btn-sm">
+                                -
+                            </button>
+
+                            <button (click)="zoomIn()" type="button" class="btn btn-primary float-right btn-sm">
+                                +
+                            </button>
+
+                        </div>
+
+                    </div>
+
+                </div>
+            </div>
+        </div>
+
+        <button type="submit" class="btn btn-success m-4 w-100">
+            <span class="fas fa-download"></span>
+            {{!idEdit ? 'Guardar' : 'Actualizar'}}
+
+        </button>
+    </div>
+</form>

@@ -1,0 +1,63 @@
+<h1 class="titulos"> Proveerdores</h1>
+
+<table class="table table-striped">
+
+    <thead>
+        <tr>
+            <th>
+                Empresa
+            </th>
+            
+
+            <th>
+                Representante
+            </th>
+
+            <th>
+                Correo
+            </th>
+
+            <th>
+                Celular
+            </th>
+
+            <th>
+                Acciones
+            </th>
+
+       </tr>
+
+    </thead>
+
+    <tbody>
+
+        <tr *ngFor="let proveedor of proveedores">
+
+            <td>
+                {{proveedor.nombre_empresa}}
+            </td>
+
+            <td>
+                {{proveedor.representante}}
+            </td>
+
+            <td>
+                {{proveedor.correo}}
+            </td>
+
+            <td>
+                {{proveedor.celular}}
+            </td>
+            
+            <td>
+                <button  [routerLink]="['/admin/editar-proveedor', proveedor.id]" class="btn btn-info btn-sm">
+                    <span class="fas fa-user-edit"></span>
+                    Editar
+                </button>
+            </td>
+        </tr>
+
+    </tbody>
+
+</table>
+
