@@ -6,6 +6,10 @@ const routes: Routes = [
     path: 'admin',
     loadChildren: () => import('./administrador/admin.module').then(m=>m.AdminModule)
   },
+  {
+    path: 'shared',
+    loadChildren: () => import('./shared/shared.module').then(m=>m.SharedModule)
+  },
   { path: '', pathMatch: 'full', redirectTo: '/welcome' },
   { path: 'welcome', loadChildren: () => import('./pages/welcome/welcome.module').then(m => m.WelcomeModule) }
 ];

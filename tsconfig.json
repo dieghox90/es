@@ -7,6 +7,7 @@
     "forceConsistentCasingInFileNames": true,
       "strict": true,
       "strictPropertyInitialization": false, //agregado por mi
+      "noImplicitAny": false, //agregado por mi
     "noImplicitReturns": true,
     "noFallthroughCasesInSwitch": true,
     "sourceMap": true,

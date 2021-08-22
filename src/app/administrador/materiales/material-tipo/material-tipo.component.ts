@@ -1,5 +1,4 @@
 import { Component, OnInit } from '@angular/core';
-import { Usuario } from 'src/app/Models/usuario';
 import Swal from 'sweetalert2';
 import { ToastrService } from 'ngx-toastr';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
@@ -19,6 +18,7 @@ export class MaterialTipoComponent implements OnInit {
   tipos: MaterialTipo[] = [];
 
   miFormulario: FormGroup = this.fb.group({
+    id: [''],
     nombre: ['', [Validators.required]],
     descripcion: [''],
   });
@@ -52,10 +52,10 @@ export class MaterialTipoComponent implements OnInit {
 
   // ----- Para actualizr o guardar -----
     
+    
     if (this.isEdit) {
       //----- -ACTUALIZAMOS-------
       this.materialTipo.id = this.isEdit;
-
       this.service.actualizar(this.materialTipo).subscribe(m => {
         Swal.fire({
           position: 'center',
@@ -67,13 +67,9 @@ export class MaterialTipoComponent implements OnInit {
         }
         );
    
-      
-        for (let i = 0; i < this.tipos.length; i++) {
-          
-          if (this.materialTipo.id == this.tipos[i].id) {
-            this.tipos[i]=this.materialTipo;
-          }
-        }
+        let itemIndex = this.tipos.findIndex(item => item.id == m.id);
+        this.tipos[itemIndex] = m;
+  
 
         this.miFormulario.reset();
         this.materialTipo = new MaterialTipo();
@@ -83,7 +79,7 @@ export class MaterialTipoComponent implements OnInit {
 
     } else {
       //----- GUARDAMOS -------
-      this.service.agregar(this.materialTipo).subscribe(u => {
+      this.service.agregar(this.materialTipo).subscribe(tip => {
         Swal.fire({
           position: 'center',
           icon: 'success',
@@ -93,7 +89,7 @@ export class MaterialTipoComponent implements OnInit {
           timer: 1200
         }
         );
-        this.tipos.push(this.materialTipo);
+        this.tipos.push(tip);
         this.miFormulario.reset();
         this.materialTipo = new MaterialTipo();
       });
@@ -105,7 +101,8 @@ export class MaterialTipoComponent implements OnInit {
   fijarEdicion(mt:MaterialTipo) {
     this.materialTipo = mt;
     this.miFormulario.patchValue(mt);
-    this.isEdit = this.materialTipo.id;
+    this.isEdit = mt.id;
+
   }
 
   campoNoEsValido(campo: string) {

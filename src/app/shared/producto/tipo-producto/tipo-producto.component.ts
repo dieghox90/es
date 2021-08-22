@@ -1,39 +1,40 @@
-import { MaterialUnidad } from 'src/app/Models/material-unidad';
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { ToastrService } from 'ngx-toastr';
+import { ProductoTipo } from 'src/app/Models/producto-tipo';
 import Swal from 'sweetalert2';
-import { MaterialUnidadService } from '../../Services/material-unidad.service';
+import { ProductoTipoService } from '../../Services/producto-tipo.service';
 
 @Component({
-  selector: 'app-material-unidad',
-  templateUrl: './material-unidad.component.html',
-  styleUrls: ['./material-unidad.component.css']
+  selector: 'app-tipo-producto',
+  templateUrl: './tipo-producto.component.html',
+  styleUrls: ['./tipo-producto.component.css']
 })
-export class MaterialUnidadComponent implements OnInit {
+export class TipoProductoComponent implements OnInit {
 
   isEdit: number;
-  materialUnidad: MaterialUnidad;
-  unidades: MaterialUnidad[] = [];
+  productoTipo: ProductoTipo;
+  tipos: ProductoTipo[] = [];
 
   miFormulario: FormGroup = this.fb.group({
+    id: [''],
     nombre: ['', [Validators.required]],
     descripcion: [''],
   });
 
   constructor(
-    private service:MaterialUnidadService,
+    private service:ProductoTipoService,
     private fb: FormBuilder,
     private toastr: ToastrService,
   ) {
-    this.materialUnidad = new MaterialUnidad();
+    this.productoTipo = new ProductoTipo();
     this.isEdit = 0;
    }
 
   ngOnInit(): void {
 
-    this.service.listar().subscribe(u => {
-      this.unidades = u;
+    this.service.listar().subscribe(tps => {
+      this.tipos = tps;
     });
 
   }
@@ -46,64 +47,68 @@ export class MaterialUnidadComponent implements OnInit {
     }
     const formValue = { ...this.miFormulario.value };
 
-    this.materialUnidad = formValue;
+    this.productoTipo = formValue;
 
   // ----- Para actualizr o guardar -----
     
+    
     if (this.isEdit) {
       //----- -ACTUALIZAMOS-------
-      this.materialUnidad.id = this.isEdit;
-
-      this.service.actualizar(this.materialUnidad).subscribe(m => {
+      this.productoTipo.id = this.isEdit;
+      this.service.actualizar(this.productoTipo).subscribe(m => {
         Swal.fire({
           position: 'center',
           icon: 'success',
-          title: 'Actualizacion',
-          html: "Tipo de material <strong>" + this.materialUnidad.nombre + "</strong> Actualizado con éxito",
+          title: 'Actualización',
+          html: "Tipo de producto <strong>" + this.productoTipo.nombre + "</strong> Actualizado con éxito",
           showConfirmButton: true,
           timer: 1200
         }
         );
-
-        let itemIndex = this.unidades.findIndex(item => item.id == m.id);
-        this.unidades[itemIndex] = m;
+   
+        let itemIndex = this.tipos.findIndex(item => item.id == m.id);
+        this.tipos[itemIndex] = m;
   
 
         this.miFormulario.reset();
-        this.materialUnidad = new MaterialUnidad();
+        this.productoTipo = new ProductoTipo();
         this.isEdit = 0;
      
       });
 
     } else {
       //----- GUARDAMOS -------
-      this.service.agregar(this.materialUnidad).subscribe(u => {
+      this.service.agregar(this.productoTipo).subscribe(tip => {
         Swal.fire({
           position: 'center',
           icon: 'success',
           title: 'Registro',
-          html: "Tipo de material <strong>" + this.materialUnidad.nombre + "</strong> Registrado con éxito",
+          html: "Tipo de Producto <strong>" + this.productoTipo.nombre + "</strong> Registrado con éxito",
           showConfirmButton: true,
           timer: 1200
         }
         );
-        this.unidades.push(u);
+        this.tipos.push(tip);
         this.miFormulario.reset();
-        this.materialUnidad = new MaterialUnidad();
+        this.productoTipo = new ProductoTipo();
       });
   
     }
     
   }
 
-  fijarEdicion(mu:MaterialUnidad) {
-    this.materialUnidad = mu;
-    this.miFormulario.patchValue(mu);
-    this.isEdit = this.materialUnidad.id;
+  fijarEdicion(mt:ProductoTipo) {
+    this.productoTipo = mt;
+    this.miFormulario.patchValue(mt);
+    this.isEdit = mt.id;
+
   }
 
   campoNoEsValido(campo: string) {
     return this.miFormulario.controls[campo].errors && this.miFormulario.controls[campo].touched;
   }
 
+
 }
+
+

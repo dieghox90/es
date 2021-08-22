@@ -53,14 +53,20 @@
         </ul>
       </li>
 
-      <li nz-submenu nzOpen nzTitle="Productos" nzIcon="shopping">
+      <li nz-submenu nzOpen nzTitle="Productos - Pedidos" nzIcon="shopping">
         <ul>
+
           <li nz-menu-item nzMatchRouter>
-            <a><span class="fa fa-folder-plus"></span> Nuevo</a>
+            <a routerLink="/shared/producto-tipo"><span class="fa fa-folder-plus"></span> Tipo Producto</a>
           </li>
 
           <li nz-menu-item nzMatchRouter>
-            <a><span class="fa fa-stream"></span> Listado</a>
+            <a routerLink="/shared/nuevo-producto"><span class="fa fa-folder-plus"></span> Nuevo Producto</a>
+          </li>
+
+       
+          <li nz-menu-item nzMatchRouter>
+            <a routerLink="/shared/listar-productos"><span class="fa fa-stream"></span> Listado</a>
           </li>
         </ul>
       </li>

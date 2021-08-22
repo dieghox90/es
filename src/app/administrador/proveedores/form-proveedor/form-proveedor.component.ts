@@ -11,10 +11,12 @@ import { Direccion } from 'src/app/Models/direccion';
 
 import * as Mapboxgl from 'mapbox-gl';
 import * as MapboxGeocoder from '@mapbox/mapbox-gl-geocoder';
-import { HttpClient } from '@angular/common/http';
+
 import { FeatureCollection } from 'geojson';
 import * as Feature from 'geojson';
 import { pipe } from 'rxjs';
+
+import { HttpClient } from '@angular/common/http';
 
 
 @Component({
@@ -262,7 +264,6 @@ export class FormProveedorComponent implements OnInit, AfterViewInit, OnDestroy 
 
 
   buscarCanton(value: string) {
-
 
     this.http.get(`https://api.mapbox.com/geocoding/v5/mapbox.places/${value}.json?access_token=pk.eyJ1IjoiZGllZ2hveDkwIiwiYSI6ImNrampmcXR1dTAxa3cyc3F3d2ZjcGRodnIifQ.w3Y0NR-ro5Ak5EgqKVgJRQ`)
       .subscribe((res: any) => {

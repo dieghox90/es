@@ -1,0 +1,86 @@
+<h1 class="titulos"> Tipos de Productos</h1>
+
+<div class="row">
+
+    <div class="col-lg-5">
+        <form (ngSubmit)="guardarOactualizar()" autocomplete="of" [formGroup]="miFormulario">
+
+            <div class="card">
+                <div [class.bg-warning]="isEdit!=0" class="card-header bg-info text-white">
+                   {{isEdit!=0?'Actualizar Tipo de Producto':'Nuevo Tipo'}} 
+                </div>
+
+                <div class="card-body">
+
+                    <div class="form-group">
+                        <label for="nombre_empresa">Nombre del Tipo:*</label>
+                        <input formControlName="nombre" type="text" class="form-control" id="nombre" name="nombre">
+                        <span *ngIf="campoNoEsValido('nombre')" class="form-text text-danger msgError">
+                            Nombre: Campo Obligatorio
+                        </span>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="descripcion">Descripción:</label>
+                        <input formControlName="descripcion" type="text" class="form-control" id="descripcion"
+                            name="descripcion">
+                    </div>
+
+                    <button [class.bg-warning]="isEdit!=0" type="submit" class="btn btn-success w-100">
+                        <span class="fas fa-download"></span>
+                        {{isEdit==0 ? 'Guardar' : 'Actualizar'}}
+
+                    </button>
+
+                </div>
+            </div>
+
+        </form>
+    </div>
+
+    <div class="col-lg-7">
+        <div class="card">
+            <div class="card-header bg-primary text-white">
+                Tipos de Productos
+               
+            </div>
+
+            <div class="card-body">
+
+
+                <table class="table table-striped">
+
+                    <thead>
+                        <tr>
+                            <th>Nombre</th>
+                            <th>Descripcion</th>
+                            <th>Acciones</th>
+                        </tr>
+                    </thead>
+
+                    <tbody>
+                        <tr *ngFor="let tipo of tipos">
+                            <td>
+                                {{tipo.nombre}}
+                            </td>
+                            <td>
+                                {{tipo.descripcion}}
+                            </td>
+                            <td>
+                                <button (click)="fijarEdicion(tipo)" class="btn btn-secondary btn-sm">
+                                    <span class="fas fa-edit"></span> Editar
+                                </button>
+                            </td>
+                        </tr>
+                    </tbody>
+
+
+
+                </table>
+
+
+            </div>
+        </div>
+    </div>
+
+</div>

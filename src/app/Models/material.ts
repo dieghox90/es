@@ -1,3 +1,4 @@
+import { FileItem } from "./file-item";
 import { MaterialTipo } from "./material-tipo";
 import { MaterialUnidad } from "./material-unidad";
 
@@ -21,4 +22,11 @@ export class Material {
 	material_tipo: MaterialTipo;
 
 	material_unidad: MaterialUnidad;
+
+	fecha_creacion?: string;
+
+	files: FileItem[];
+
+
+
 }

@@ -1,0 +1,45 @@
+<h1 class="titulos"> Listado de Productos - Pedidos</h1>
+
+<table class="table table-striped">
+
+    <thead>
+        <tr>
+            <td>Foto</td>
+            <td>Producto</td>
+            <td>Tipo</td>
+            <td>Cliente</td>
+            <td>Acciones</td>
+        </tr>
+    </thead>
+
+    <tbody>
+
+        <tr *ngFor="let producto of productos">
+
+            <td>
+                <img *ngIf="producto.files.length>0" style="width: 120px;"  [src]="urlBaseImg+producto.files[0].nombreArchivo" class="img-fluid">
+
+            </td>
+
+            <td>
+                {{producto.nombre}}
+            </td>
+
+            <td>
+                {{producto.producto_tipo.nombre}}
+            </td>
+
+            <td>
+                {{producto?.cliente?.apellidos}} {{producto?.cliente?.nombres}}
+            </td>
+            <td>
+                <button [routerLink]="['/shared/editar-producto', producto.id]" class="btn btn-primary">
+                    <span class="fas fa-edit"></span>
+                </button>
+            </td>
+
+        </tr>
+
+    </tbody>
+
+</table>
