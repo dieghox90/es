@@ -17,6 +17,7 @@ import * as Feature from 'geojson';
 import { pipe } from 'rxjs';
 
 import { HttpClient } from '@angular/common/http';
+import { Producto } from 'src/app/Models/producto';
 
 
 @Component({
@@ -151,6 +152,8 @@ export class FormProveedorComponent implements OnInit, AfterViewInit, OnDestroy 
         this.idEdit = pro.id;
         this.miFormulario.patchValue(pro);
 
+        
+
         this.proveedor = pro;
         // console.log(this.proveedor);
 
@@ -182,6 +185,8 @@ export class FormProveedorComponent implements OnInit, AfterViewInit, OnDestroy 
 
     this.proveedor.direccion.longitud = this.marker.getLngLat().lng;
     this.proveedor.direccion.latitud = this.marker.getLngLat().lat;
+    
+    
 
     // ----- Para actualizr o guardar -----
     if (this.idEdit) {

@@ -25,7 +25,7 @@ export class Producto {
 	
 	producto_tipo:ProductoTipo;
 	
-  cliente:Usuario;
+  usuario:Usuario;
 	
   files: FileItem[];
 

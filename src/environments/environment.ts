@@ -6,7 +6,8 @@ export const environment = {
   production: false,
   baseUrl: 'http://localhost:8080',
   baseUrlImg: 'http://localhost:8080/api/uploads/img/',
-  mapBoxToken:'pk.eyJ1IjoiZGllZ2hveDkwIiwiYSI6ImNrczd3bHJuYzBlNjQyb3FxMXFlYWVjcHcifQ.zDjnYkKPT0q_yUXo5JZzyg'
+  mapBoxToken: 'pk.eyJ1IjoiZGllZ2hveDkwIiwiYSI6ImNrczd3bHJuYzBlNjQyb3FxMXFlYWVjcHcifQ.zDjnYkKPT0q_yUXo5JZzyg',
+  AUTH_ENDPOINT: 'http://localhost:8080/oauth/token'
 };
 
 /*

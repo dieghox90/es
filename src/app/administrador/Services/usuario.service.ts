@@ -40,5 +40,22 @@ export class UsuarioService {
     return this.http.put<any>(`${this.baseUrl}/usuarios/activar/${id}`,null);
   }
 
+  
+  enviarCorreoRecuperacion(correo: string): Observable<Usuario> {
+    return this.http.get<Usuario>(`${this.baseUrl}/clave/correos/${correo}`);
+  }
+
+
+  compararCodigoRecuperacion(codigo: string): Observable<Usuario> {
+    return this.http.get<Usuario>(`${this.baseUrl}/clave/codigo/${codigo}`);
+  }
+
+
+  cambiarClave(usuario: Usuario):Observable<Usuario> {
+    return this.http.put<Usuario>(`${this.baseUrl}/clave/restablecer`, usuario);
+  }
+
+ 
+
 
 }

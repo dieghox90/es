@@ -19,7 +19,11 @@
       "architect": {
         "build": {
           "builder": "@angular-devkit/build-angular:browser",
-          "options": {
+            "options": {
+              "allowedCommonJsDependencies": [
+                "secure-web-storage",
+                "crypto-js"
+              ],
             "outputPath": "dist/pp",
             "index": "src/index.html",
             "main": "src/main.ts",

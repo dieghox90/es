@@ -1,4 +1,5 @@
 import { Direccion } from "./direccion";
+import { Rol } from "./rol";
 
 export class Usuario {
 
@@ -10,4 +11,11 @@ export class Usuario {
   correo: string;
   direccion: Direccion;
   activado: boolean;
+  username: string;
+  password: string;
+  codigoRecuperacion: string;
+  roles: Rol[];
+
+// -- Para los Authorities del login
+  rolesAuth: String[] = [];
 }

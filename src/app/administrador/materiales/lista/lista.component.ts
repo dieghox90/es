@@ -172,7 +172,7 @@ export class ListaComponent implements OnInit {
 
 
   resetMaterial() {
-    this.material = new Material();
+    //this.material = new Material();
     this.archivos = [];
     this.miFormulario.reset();
     this.miFormulario.controls["material_unidad"].patchValue('');
@@ -237,7 +237,7 @@ export class ListaComponent implements OnInit {
 
   openModalMaterial() {
     this.materialesFiltrados = [];
-    this.archivos = [];
+   this.archivos = [];
   }
 
 
@@ -252,6 +252,8 @@ export class ListaComponent implements OnInit {
     });
 
 
+    console.log("GUARDAR");
+    console.log(mat);
     this.service.subirImagenes(mat).subscribe(u => {
       Swal.fire({
         position: 'center',

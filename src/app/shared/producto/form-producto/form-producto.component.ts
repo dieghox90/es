@@ -22,6 +22,7 @@ import { Usuario } from 'src/app/Models/usuario';
 import { switchMap } from 'rxjs/operators';
 
 
+
 //Importando JQUERY
 declare var $: any;
 
@@ -63,8 +64,8 @@ export class FormProductoComponent implements OnInit {
   @ViewChild('inputFilter', { static: true }) inputElementSearch: ElementRef
 
   // ------
-  
-  @ViewChild('entrega',{ static: true }) checkInput:ElementRef;
+
+  @ViewChild('entrega', { static: true }) checkInput: ElementRef;
 
   // --- Mapa -----
   @ViewChild('mapa') divMapa!: ElementRef
@@ -96,7 +97,7 @@ export class FormProductoComponent implements OnInit {
     private serviceTipo: ProductoTipoService,
     private http: HttpClient) {
     this.producto = new Producto();
-    this.producto.cliente = new Usuario();
+    this.producto.usuario = new Usuario();
     this.producto.direccion_entrega = new Direccion();
     this.producto.producto_tipo = new ProductoTipo();
   }
@@ -121,27 +122,26 @@ export class FormProductoComponent implements OnInit {
         this.isEdit = p.id;
         this.miFormulario.patchValue(p);
         this.producto = p;
-        console.log(this.producto);
+
+        this.usuario = p.usuario;
+        
+       
+
+        if (p.usuario.id != null) {
+          this.inputElementSearch.nativeElement.value = p.usuario.apellidos + " " + p.usuario.nombres;
+        } 
 
         
-        if (p.cliente.id != null) {
-          this.inputElementSearch.nativeElement.value = p.cliente.apellidos + " " + p.cliente.nombres;
-          this.usuario = p.cliente;
-        } else {
-          this.usuario = new Usuario();
-        }
-
-        if (p.files.length > 0) {
           this.archivos = p.files;
-        }
+        
 
         if (p.direccion_entrega.id != null) {
-          
+
           this.marker.setLngLat([p.direccion_entrega.longitud, p.direccion_entrega.latitud]);
           this.mapa.setCenter([p.direccion_entrega.longitud, p.direccion_entrega.latitud]);
           this.activarEntrega = true;
           this.miFormulario.controls["producto_tipo"].patchValue(this.tipos.find(el => el.id === p.producto_tipo.id));
-          this.checkInput.nativeElement.checked=true;
+          this.checkInput.nativeElement.checked = true;
         }
       });
 
@@ -149,44 +149,44 @@ export class FormProductoComponent implements OnInit {
 
 
   ngAfterViewInit(): void {
-    
-      // ---- PARA EL MAPA ------
-      (Mapboxgl as any).accessToken = environment.mapBoxToken;
-      this.mapa = new Mapboxgl.Map({
-        container: this.divMapa.nativeElement,
-        style: 'mapbox://styles/mapbox/streets-v11',
-        center: this.center,
-        zoom: this.zoomLevel
-      });
+
+    // ---- PARA EL MAPA ------
+    (Mapboxgl as any).accessToken = environment.mapBoxToken;
+    this.mapa = new Mapboxgl.Map({
+      container: this.divMapa.nativeElement,
+      style: 'mapbox://styles/mapbox/streets-v11',
+      center: this.center,
+      zoom: this.zoomLevel
+    });
 
 
-      // ---- Colocar Marcador ------
+    // ---- Colocar Marcador ------
 
-      this.marker = new Mapboxgl.Marker({
-        draggable: true
-      })
-        .setLngLat(this.mapa.getCenter())
-        .addTo(this.mapa);
+    this.marker = new Mapboxgl.Marker({
+      draggable: true
+    })
+      .setLngLat(this.mapa.getCenter())
+      .addTo(this.mapa);
 
 
-      // ---- Evento de zoom con la rueda del mouse ---
-      this.mapa.on('zoom', () => {
-        this.zoomLevel = this.mapa.getZoom();
-      });
+    // ---- Evento de zoom con la rueda del mouse ---
+    this.mapa.on('zoom', () => {
+      this.zoomLevel = this.mapa.getZoom();
+    });
 
-      //Evento cuando termina de hacerse el zoom
-      this.mapa.on('zoomend', () => {
-        if (this.mapa.getZoom() > 18) {
-          this.mapa.zoomTo(18);
-        }
-      });
+    //Evento cuando termina de hacerse el zoom
+    this.mapa.on('zoomend', () => {
+      if (this.mapa.getZoom() > 18) {
+        this.mapa.zoomTo(18);
+      }
+    });
 
-      //Evento cuando se mueve el mapa con el mouse
-      this.mapa.on('move', (event) => {
-        const { lng, lat } = event.target.getCenter();
-        this.center = [lng, lat];
-      });
-    
+    //Evento cuando se mueve el mapa con el mouse
+    this.mapa.on('move', (event) => {
+      const { lng, lat } = event.target.getCenter();
+      this.center = [lng, lat];
+    });
+
 
   }
 
@@ -205,51 +205,56 @@ export class FormProductoComponent implements OnInit {
 
     // Asignamos los datos del formulario al objeto Material y los archivos cargados
     this.producto = formValue;
-    
- 
+
+
 
     this.producto.files = this.archivos;
 
-    console.log("ARCHIVOOS");
-    console.log(this.producto.files);
-
-    // Fijar usuario
-    if (this.usuario.id != null) {
-      this.producto.cliente = this.usuario;
-    }
 
     if (this.activarEntrega) {
       this.producto.direccion_entrega.longitud = this.marker.getLngLat().lng;
       this.producto.direccion_entrega.latitud = this.marker.getLngLat().lat;
     }
 
-    // ----- Para actualizr o guardar -----
 
+    this.producto.usuario = this.usuario;
+    // ----- Para actualizAr o guardar -----    
 
     if (this.isEdit != 0) {
       //------- ACTUALIZAMOS ---------
       this.producto.id = this.isEdit;
-      console.log('ACUTUALIZAAAR');
       console.log(this.producto);
+      this.archivos = this.producto.files;
+      this.producto.files = [];
+      this.service.actualizar(this.producto).subscribe(u => {
+
+
+        this.producto.files = this.archivos; 
       
-      this.service.agregar(this.producto).subscribe(u => {
-        Swal.fire({
-          position: 'center',
-          icon: 'success',
-          title: 'Actualizacion',
-          html: "Prducto <strong>" + u.nombre + "</strong> Actualizado con éxito",
-          showConfirmButton: true,
-          timer: 1200
-        }
-        );
+        this.service.subirImagenes(this.producto).subscribe(p => {
 
-        //Actualizar el valor editado en la lista que ya esta en pantalla
-        /* let itemIndex = this.materiales.findIndex(item => item.id == u.id);
-         this.materiales[itemIndex] = u;*/
+          Swal.fire({
+            position: 'center',
+            icon: 'success',
+            title: 'Actualizacion',
+            html: "Prducto <strong>" + u.nombre + "</strong> Actualizado con éxito",
+            showConfirmButton: true,
+            timer: 1200
+          });
 
-       // this.miFormulario.reset();
-       // this.producto = new Producto();
+  
+         if (p.files != null) {
+            this.archivos = p.files;
+          } else {
+           this.archivos= this.producto.files;  
+          }
 
+        });
+
+    
+  
+        // this.producto = u;
+        // this.archivos = u.files;
       });
 
     } else {
@@ -257,7 +262,9 @@ export class FormProductoComponent implements OnInit {
       //--------- GUARDAMOS -------------
       const date = new Date();
       //this.material.fecha_creacion = this.datePipe.transform(date, "yyyy-MM-dd'T'HH:mm:ss")?.toString();
-
+      console.log(this.producto);
+      this.producto.usuario = new Usuario();
+      this.producto.usuario.id = this.usuario.id;
       this.service.agregar(this.producto).subscribe(u => {
         Swal.fire({
           position: 'center',
@@ -271,12 +278,14 @@ export class FormProductoComponent implements OnInit {
         this.miFormulario.reset();
         this.miFormulario.controls["producto_tipo"].patchValue('');
         this.producto = new Producto;
-        this.producto.cliente = new Usuario();
+        this.producto.usuario = new Usuario();
         this.producto.direccion_entrega = new Direccion();
         this.producto.producto_tipo = new ProductoTipo();
         this.archivos = [];
         this.activarEntrega = false;
         this.inputElementSearch.nativeElement.value = "";
+
+        this.producto = u;
       });
     }
 
@@ -370,9 +379,11 @@ export class FormProductoComponent implements OnInit {
   }
 
   fijarClientesBusqueda(u: Usuario) {
-    this.archivos = [];
+    // this.archivos = [];
     this.usuariosFiltrados = [];
     this.usuario = u;
+    this.producto.usuario = u;
+    console.log(this.producto.usuario.id);
 
     //this.archivos = m.files;
     this.inputElementSearch.nativeElement.value = u.apellidos + " " + u.nombres;
@@ -390,7 +401,6 @@ export class FormProductoComponent implements OnInit {
       this.archivos.push(this.archivo);
 
     }
-
   }
 
 
@@ -460,14 +470,75 @@ export class FormProductoComponent implements OnInit {
     if (event.target.checked) {
       this.activarEntrega = true;
       this.miFormulario.get('direccion_entrega.provincia')?.setValidators([Validators.required]);
-      
+
     } else {
       this.activarEntrega = false;
       this.miFormulario.get('direccion_entrega.provincia')?.clearValidators();
       this.miFormulario.get('direccion_entrega.provincia')?.updateValueAndValidity();
 
-      
+
     }
+  }
+
+
+
+
+  resetMaterial() {
+    //this.material = new Material();
+    this.archivos = [];
+    //this.miFormulario.reset();
+    //this.miFormulario.controls["material_unidad"].patchValue('');
+    //this.miFormulario.controls["material_tipo"].patchValue('');
+    this.isEdit = 0;
+  }
+
+  seleccionarArchivo22(event) {
+
+    if (event.target.files.length > 0) {
+
+      console.log(event.target.files);
+      this.archivo = new FileItem(event.target.files[0]);
+      const reader = new FileReader();
+      reader.onload = e => this.archivo.imgPreview = reader.result as string;
+      reader.readAsDataURL(this.archivo.archivo);
+      this.archivos.push(this.archivo);
+
+    }
+
+  }
+
+
+  subirImagenes22() {
+
+    const mat: Producto = new Producto();
+    mat.id = this.producto.id;
+    mat.files = [];
+
+    this.archivos.forEach(f => {
+      mat.files.push(f);
+    });
+
+
+    console.log("GUARDAR");
+    console.log(mat);
+    this.service.subirImagenes(mat).subscribe(u => {
+      Swal.fire({
+        position: 'center',
+        icon: 'success',
+        title: 'Carga Completa',
+        html: "Imagenes <strong>" + u.nombre + "</strong> Subidas con éxito",
+        showConfirmButton: true,
+        timer: 1200
+      }
+      );
+
+     // this.material = u;
+      this.producto=u;
+
+      $('#staticBackdropImagenes').modal('hide');
+
+    });
+
   }
 
 }

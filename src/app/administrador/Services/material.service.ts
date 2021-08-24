@@ -42,6 +42,7 @@ export class MaterialService {
     if (ma.files.length > 0) {
       ma.files.forEach(m => {
         formData.append("files", m.archivo);
+        console.log(m.archivo);
       });
     }
     

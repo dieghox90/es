@@ -1,0 +1,125 @@
+
+<div class="padre">
+
+<div class="card hijo">
+    <div class="card-header bg-info text-white">
+        Ingreso al Sistema
+    </div>
+
+    <div class="card-body">
+        <form method="post">
+            <div class="form-group">
+                <input placeholder="Ingrese Username o Correo" [(ngModel)]="usuario.username" type="text" class="form-control" name="username" id="username"
+                    placeholder="Usuario" autofocus required>
+            </div>
+            <div class="form-group">
+                <input [(ngModel)]="usuario.password" type="password" class="form-control" name="password" id="password"
+                    placeholder="Contraseña" required>
+            </div>
+    
+            <div class="form-group">
+                <button (click)="login()" type="submit" class="btn btn-primary btn-block">
+                    Ingresar <i class="fas fa-sign-in-alt"></i>
+                </button>
+            </div>
+        </form>
+
+        <a type="button" (click)="abirModelCorreo()" class="text-primary float-right">Recuperar Contraseña</a>
+    </div>
+</div>
+</div>
+
+
+<!---CORREO  -->
+<div class="modal fade" id="modalCorreo" tabindex="-1">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Ingrese su correo para recuperación de clave</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+
+                <div class="form-group">
+                    <label for="codigo">Correo:</label>
+                    <input type="email"  [(ngModel)]="correo" class="form-control" id="correo" name="correo">
+                </div>
+            
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Cerrar</button>
+                <button (click)="enviarCodigo()" type="button" class="btn btn-primary">Enviar Correo</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<!---CODIGO  -->
+<div class="modal fade" id="modalCodigo" tabindex="-1">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Ingrese el codigo enviado a su correo</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+
+                <div class="form-group">
+                    <label for="codigo">Código:</label>
+                    <input type="text"  [(ngModel)]="codigo" class="form-control" id="codigo" name="codigo">
+                </div>
+            
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Cerrar</button>
+                <button (click)="compararCodigo()" type="button" class="btn btn-primary">Aceptar</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<!---CONTRASEÑAS  -->
+<div class="modal fade" id="modalClave" tabindex="-1">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Restablecer Contraseña</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+
+                <div class="form-group">
+                    <label for="codigo">Contraseña:</label>
+                    <input type="text"  [(ngModel)]="clave1" class="form-control" id="clave1" name="clave1">
+                </div>
+
+                <div class="form-group">
+                    <label for="codigo">Repetir Contraseña:</label>
+                    <input #inputFilter (keyup)="compararClaves($event)" type="text"  [(ngModel)]="clave2" class="form-control" id="clave2" name="clave2">
+
+                    <div *ngIf="show && bandera" [class.text-success]="bandera">
+                        Las contraseñas coinciden
+                    </div>
+
+                    <div *ngIf="show && !bandera" [class.text-danger]="!bandera">
+                        Las contraseñas no coinciden
+                    </div>
+                </div>
+                
+            
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Cerrar</button>
+                <button (click)="cambiarClave()" type="button" class="btn btn-primary">Aceptar</button>
+            </div>
+        </div>
+    </div>
+</div>

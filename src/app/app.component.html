@@ -1,10 +1,6 @@
 <nz-layout class="app-layout">
-  <nz-sider class="menu-sidebar"
-            nzCollapsible
-            nzWidth="256px"
-            nzBreakpoint="md"
-            [(nzCollapsed)]="isCollapsed"
-            [nzTrigger]="null">
+  <nz-sider [class.hid]="ocultar" class="menu-sidebar" nzCollapsible nzWidth="256px" nzBreakpoint="md"
+    [(nzCollapsed)]="isCollapsed" [nzTrigger]="null">
     <div class="sidebar-logo">
       <a href="https://ng.ant.design/" target="_blank">
         <img src="https://ng.ant.design/assets/img/logo.svg" alt="logo">
@@ -64,7 +60,7 @@
             <a routerLink="/shared/nuevo-producto"><span class="fa fa-folder-plus"></span> Nuevo Producto</a>
           </li>
 
-       
+
           <li nz-menu-item nzMatchRouter>
             <a routerLink="/shared/listar-productos"><span class="fa fa-stream"></span> Listado</a>
           </li>
@@ -74,21 +70,32 @@
   </nz-sider>
   <nz-layout>
     <nz-header>
-      
+
       <div class="app-header">
         <span class="header-trigger" (click)="isCollapsed = !isCollapsed">
-            <i class="trigger"
-               nz-icon
-               [nzType]="isCollapsed ? 'menu-unfold' : 'menu-fold'"
-            ></i>
-        </span>  
-
-        <span style="float:right;padding-right: 10px;">
-            Usuario
+          <i class="trigger" nz-icon [nzType]="isCollapsed ? 'menu-unfold' : 'menu-fold'"></i>
         </span>
+
+        <div style="float:right;padding-right: 10px;">
+          {{this.apellidos}} {{this.nombres}}
+
+          <div class="btn-group">
+            <button type="button" class="btn btn-sm btn-secondary dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+        
+            </button>
+            <div class="dropdown-menu dropdown-menu-right">
+              <button class="btn-sm dropdown-item" type="button">
+               <span class="fas fa-user-cog"></span> Mis Datos
+              </button>
+              <button (click)="logout() " class="btn-sm dropdown-item" type="button">
+                <span class="fas fa-sign-out-alt"></span>Salir
+              </button>
+            </div>
+          </div>
+
+        </div>
       </div>
-    
- 
+
     </nz-header>
 
     <nz-content>

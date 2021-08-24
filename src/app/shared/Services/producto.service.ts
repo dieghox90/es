@@ -1,4 +1,4 @@
-import { HttpClient, HttpParams } from '@angular/common/http';
+import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { Producto } from 'src/app/Models/producto';
@@ -12,6 +12,8 @@ import { environment } from 'src/environments/environment';
 export class ProductoService {
 
   private baseUrl: string = environment.baseUrl + "/api";
+
+
   
   constructor(private http: HttpClient) { }
 
@@ -23,14 +25,17 @@ export class ProductoService {
     if (mu.files.length > 0) {
       mu.files.forEach(m => {
         formData.append("files", m.archivo);
+        console.log("Service");
+        console.log(m);
+        
       });
     }
     
-
+   // alert(mu.cliente.nombres + " "+ mu.cliente.id);
     mu.files = [];
     formData.append("producto", JSON.stringify(mu));
  
-
+ 
     return this.http.post<Producto>(`${this.baseUrl}/producto`, formData);
 
   
@@ -42,11 +47,11 @@ export class ProductoService {
     
     if (ma.files.length > 0) {
       ma.files.forEach(m => {
-        formData.append("files", m.archivo);
+          formData.append("files", m.archivo);
       });
     }
     
-    formData.append("id_material", ma.id + "");
+    formData.append("id_producto", ma.id + "");
 
     return this.http.put<Producto>(`${this.baseUrl}/producto-saveimagenes`, formData);
     
