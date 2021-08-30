@@ -17,6 +17,12 @@ export class ProductoService {
   
   constructor(private http: HttpClient) { }
 
+
+
+  guardarSinImagen(p:Producto): Observable<Producto> {
+    return this.http.post<Producto>(`${this.baseUrl}/productos/save/`,p);
+  }
+
   
   agregar(mu: Producto): Observable<Producto> {
     
@@ -41,17 +47,16 @@ export class ProductoService {
   
   }
 
-  subirImagenes(ma: Producto) {
+  subirImagenes(p: Producto) {
     
     let formData = new FormData();
     
-    if (ma.files.length > 0) {
-      ma.files.forEach(m => {
-          formData.append("files", m.archivo);
+    p.files.forEach(f => {
+      console.log(f.nombreArchivo);
+          formData.append("files", f.archivo);
       });
-    }
-    
-    formData.append("id_producto", ma.id + "");
+  
+    formData.append("id_producto", p.id + "");
 
     return this.http.put<Producto>(`${this.baseUrl}/producto-saveimagenes`, formData);
     
@@ -68,6 +73,18 @@ export class ProductoService {
   listar(): Observable<Producto[]> {
     return this.http.get<Producto[]>(`${this.baseUrl}/productos/`);
   }
+
+
+  listarProductosVenta(): Observable<Producto[]> {
+    return this.http.get<Producto[]>(`${this.baseUrl}/productos/venta/`);
+  }
+ 
+
+
+  listarProductosCliente(id:number): Observable<Producto[]> {
+    return this.http.get<Producto[]>(`${this.baseUrl}/productos/cliente/${id}`);
+  }
+
 
   actualizar(mu: Producto): Observable<Producto> {
     return this.http.put<Producto>(`${this.baseUrl}/producto`, mu);
@@ -86,4 +103,7 @@ export class ProductoService {
   filtrarClientes( termino:string): Observable<Usuario[]> {
     return this.http.get<Usuario[]>(`${this.baseUrl}/usuario-busqueda/${termino}`);
   }
+
+
+
 }

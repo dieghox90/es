@@ -1,4 +1,4 @@
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { Usuario } from 'src/app/Models/usuario';
@@ -32,6 +32,17 @@ export class UsuarioService {
     return this.http.get<Usuario>(`${this.baseUrl}/usuarios/${id}`);
   }
 
+
+  
+  getUsuarioPorCedulaOcorreo(cedula: string, correo: string): Observable<Usuario[]>{
+    let params = new HttpParams()
+    .set('cedula', cedula)
+    .set('correo', correo)
+    return this.http.get<Usuario[]>(`${this.baseUrl}/usuario/find/cedula-correo/`, {params:params});
+  }
+
+
+
   inactivar(id: number): Observable<any> {
     return this.http.put<any>(`${this.baseUrl}/usuarios/inactivar/${id}`,null);
   }
@@ -56,6 +67,18 @@ export class UsuarioService {
   }
 
  
+
+  getUsuarioLogin(busqueda: string): Observable<Usuario>{
+    return this.http.get<Usuario>(`${this.baseUrl}/clave/usuarios/find/${busqueda}`);
+  }
+
+  getClaveEncriptada(claveDB: string,claveComparar: string): Observable<any>{
+    let params = new HttpParams()
+    .set('claveDB', claveDB)
+    .set('claveComparar', claveComparar)
+    return this.http.get<any>(`${this.baseUrl}/usuario/clave/actual/`, {params:params, responseType: 'text' as 'json'});
+  }
+
 
 
 }

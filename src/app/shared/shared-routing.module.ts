@@ -1,3 +1,5 @@
+import { VerComponent } from './producto/ver/ver.component';
+import { PerfilComponent } from './perfil/perfil.component';
 import { ListaProductosComponent } from './producto/lista-productos/lista-productos.component';
 import { FormProductoComponent } from './producto/form-producto/form-producto.component';
 import { TipoProductoComponent } from './producto/tipo-producto/tipo-producto.component';
@@ -26,6 +28,14 @@ const routes: Routes = [
       {
         path: 'listar-productos',
         component: ListaProductosComponent
+      },
+      {
+        path: 'perfil',
+        component: PerfilComponent
+      },
+      {
+        path: 'ver-producto',
+        component: VerComponent
       },
     ]
   }

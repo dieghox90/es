@@ -27,6 +27,9 @@ export class LoginComponent implements OnInit {
   bandera: boolean = false;
   show: boolean = false;
 
+
+  cargando = false;
+
   EMAIL_REGEX = /^[a-zA-Z0-9.!#$%&’*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$/;
 
   constructor(private router: Router,
@@ -48,19 +51,26 @@ export class LoginComponent implements OnInit {
       this.toastr.error('Complete los campos correctamente', 'Error')
       return
     }
-
-    this.authService.login(this.usuario).subscribe(res => {
-      console.log(res);
-      this.authService.guardarUsuario(res.access_token);
-      this.authService.guardarToken(res.access_token);
-      this.router.navigate(['/welcome']);
-      Swal.fire('Login', 'Hola ' + this.authService.usuario.apellidos + ' has iniciado session', 'success');
-    }, err => {
-      if (err.status == 400) {
-        Swal.fire('Error Login', 'Usuario o clave incorrectas', 'error');
-      };
-
+    this.usuarioService.getUsuarioLogin(this.usuario.username).subscribe(u => {
+      
+      if (u == null) {
+        Swal.fire('Error', 'No existe un usuario registrado con la cédula y correo ingresada', 'error');
+      } else {
+        this.authService.login(this.usuario).subscribe(res => {
+          this.authService.guardarUsuario(res.access_token);
+          this.authService.guardarToken(res.access_token);
+          this.router.navigate(['/welcome']);
+          Swal.fire('Login', 'Hola ' + this.authService.usuario.nombres + ' has iniciado session', 'success');
+        }, err => {
+          if (err.status == 400) {
+            Swal.fire('Error Login', 'Usuario o clave incorrectas', 'warning');
+          };
+    
+        });
+      }
     });
+
+ 
 
   }
 
@@ -77,16 +87,18 @@ export class LoginComponent implements OnInit {
 
 
     if (this.EMAIL_REGEX.test(this.correo)) {
-    
+      this.cargando = true;
 
       this.usuarioService.enviarCorreoRecuperacion(this.correo).subscribe(res => {
         if (res == null) {
-          this.toastr.error('No existe un usuario registrado con ese correo ', 'Error')
+          this.toastr.error('No existe un usuario registrado con ese correo ', 'Error');
+          this.cargando = false;
         } else {
           this.toastr.success(`${res.nombres} ${res.apellidos} Se ha enviado un mensaje a su correo`, 'Éxito')
           this.correo = "";
           $('#modalCorreo').modal('hide');
           $('#modalCodigo').modal('show');
+          this.cargando = false;
         }
       });
 

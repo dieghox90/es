@@ -21,6 +21,11 @@
                 Celular
             </th>
 
+            
+            <th>
+                Rol
+            </th>
+
             <th>
                 Acciones
             </th>
@@ -31,25 +36,30 @@
 
     <tbody>
 
-        <tr *ngFor="let usuario of usuarios">
+        <tr *ngFor="let usuario of usuarios" >
 
-            <td>
+         
+            <td >
                 {{usuario.nombres}}
             </td>
 
-            <td>
+            <td  >
                 {{usuario.apellidos}}
             </td>
 
-            <td>
+            <td >
                 {{usuario.correo}}
             </td>
 
-            <td>
+            <td >
                 {{usuario.celular}}
             </td>
+
+            <td >
+                {{usuario.roles[0]?.etiqueta}}
+            </td>
             
-            <td>
+            <td >
                 <button *ngIf="banderaInactivos==false" [routerLink]="['/admin/editar-usuario', usuario.id]" class="btn btn-info btn-sm">
                     <span class="fas fa-user-edit"></span>
                     Editar
@@ -64,6 +74,7 @@
                     Activar
                 </button>
             </td>
+    
         </tr>
 
     </tbody>

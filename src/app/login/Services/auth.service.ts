@@ -38,6 +38,7 @@ export class AuthService {
   guardarUsuario(accessToken: string): void {
 
     let payload = this.obtenerToken(accessToken);
+    console.log(payload.authorities);
     this._usuario = new Usuario();
     this._usuario.nombres = payload.nombres;
     this._usuario.apellidos = payload.apellidos;
@@ -114,7 +115,7 @@ export class AuthService {
   }
 
   hasRole(role: String): boolean {
-    if (this.usuario.rolesAuth.includes(role)) {
+    if (this.usuario?.rolesAuth?.includes(role)) {
       return true;
     }
 

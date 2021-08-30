@@ -12,18 +12,16 @@
                 </div>
                 <div class="card-body">
 
-                    <div class="form-group">
-                        <label for="nombre">Nombre del Producto:*</label>
-                        <input formControlName="nombre" type="text" class="form-control" id="nombre" name="nombre">
-                        <span *ngIf="campoNoEsValido('nombre')" class="form-text text-danger msgError">
-                            Nombre: Campo Obligatorio
-                        </span>
+
+                    <div class="custom-control custom-switch text-center mb-2">
+                        <input #clienteInput (change)="onCheckboxChangeCliente($event)"  type="checkbox"
+                            class="custom-control-input" id="customSwitch2">
+                        <label class="custom-control-label" for="customSwitch2">Pedido por cliente</label>
                     </div>
 
 
-
-                    <div class="form-group" style="position:relative;">
-                        <label for="nombre">Cliente:*</label>
+                    <div *ngIf="activarCliente" class="form-group" style="position:relative;">
+                        <label for="nombre">Cliente:</label>
 
                         <div class="input-group mt-1">
                             <div class="input-group-prepend">
@@ -43,8 +41,20 @@
                                 class="list-group-item list-group-item-action">
                                 {{u.apellidos}} {{u.nombres}}
                             </button>
-
                         </div>
+                    </div>
+
+
+
+
+
+
+                    <div class="form-group">
+                        <label for="nombre">Nombre del Producto:*</label>
+                        <input formControlName="nombre" type="text" class="form-control" id="nombre" name="nombre">
+                        <span *ngIf="campoNoEsValido('nombre')" class="form-text text-danger msgError">
+                            Nombre: Campo Obligatorio
+                        </span>
                     </div>
 
 
@@ -72,7 +82,7 @@
 
                     <div class="form-group">
                         <label for="precio">Precio:</label>
-                        <input formControlName="precio" type="text" class="form-control" id="precio" name="precio">
+                        <input formControlName="precio" type="number" class="form-control" id="precio" name="precio">
                     </div>
 
 
@@ -145,9 +155,7 @@
 
                     </div>
 
-
-
-                    <div *ngIf="activarEntrega || producto?.direccion_entrega?.id!=null">
+                    <div *ngIf="activarEntrega">
                         <div style="width:100%">
                             <div>
 

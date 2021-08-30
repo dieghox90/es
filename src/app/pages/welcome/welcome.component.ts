@@ -7,9 +7,14 @@ import { Component, OnInit } from '@angular/core';
 })
 export class WelcomeComponent implements OnInit {
 
+
+  nombres: string | null ;
+  apellidos: string | null;
   constructor() { }
 
   ngOnInit() {
+    this.nombres = sessionStorage.getItem('nombres');
+    this.apellidos = sessionStorage.getItem('apellidos');
   }
 
 }

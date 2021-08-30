@@ -3,6 +3,7 @@ import { Usuario } from 'src/app/Models/usuario';
 import { UsuarioService } from '../../Services/usuario.service';
 import Swal from 'sweetalert2';
 import { Router } from '@angular/router';
+import { AuthService } from 'src/app/login/Services/auth.service';
 
 
 @Component({
@@ -15,7 +16,8 @@ export class ListaUsuariosComponent implements OnInit {
   usuarios: Usuario[] = [];
   banderaInactivos = false;
   
-  constructor(private service: UsuarioService, private router:Router) { }
+  constructor(private service: UsuarioService, private router: Router,
+    public authService:AuthService) { }
 
   ngOnInit(): void {
 
@@ -23,6 +25,9 @@ export class ListaUsuariosComponent implements OnInit {
       
       this.service.listarUsuariosActivos(false).subscribe(us => {
         this.usuarios = us;
+        console.log(us);
+        
+       
         this.banderaInactivos = true;
       });
 
@@ -30,6 +35,20 @@ export class ListaUsuariosComponent implements OnInit {
       
       this.service.listarUsuariosActivos(true).subscribe(us => {
         this.usuarios = us;
+        if (this.authService.hasRole("ROLE_EMPLEADO")) {
+          this.usuarios.forEach(u => {
+            
+            u.roles.forEach(r => {
+              
+              if (r.nombre != "ROLE_CLIENTE") {
+                u.activado = false; ///para no presentar otros roles al empleado    
+              }
+            })
+
+            
+          });
+        }
+        
       });
     }
 

@@ -1,9 +1,11 @@
+import { MaterialIngreso } from './../../Models/material-ingreso';
 import { HttpClient, HttpEvent, HttpParams, HttpRequest } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { materialize } from 'rxjs/operators';
 import { Material } from 'src/app/Models/material';
 import { environment } from 'src/environments/environment';
+import { Proveedor } from 'src/app/Models/proveedor';
 
 @Injectable({
   providedIn: 'root'
@@ -19,7 +21,7 @@ export class MaterialService {
     
     let formData = new FormData();
     
-    if (mu.files.length > 0) {
+    if (mu.files?.length > 0) {
       mu.files.forEach(m => {
         formData.append("files", m.archivo);
       });
@@ -82,8 +84,41 @@ export class MaterialService {
   filtrarMateriales( termino:string): Observable<Material[]> {
     return this.http.get<Material[]>(`${this.baseUrl}/material-busqueda/${termino}`);
   }
- 
 
+
+
+
+
+
+  actualizarCantidad(mu: Material):Observable<Material> {
+    return this.http.put<Material>(`${this.baseUrl}/material/cantidad`, mu);
+  }
+  
+
+  // ------- MATERIAL INGRESO --------
+
+ 
+ saveIngreso(mu: MaterialIngreso):Observable<MaterialIngreso> {
+    return this.http.post<MaterialIngreso>(`${this.baseUrl}/material/ingreso`, mu);
+  }
+
+  listarIngresos(id:number): Observable<MaterialIngreso[]> {
+    return this.http.get<MaterialIngreso[]>(`${this.baseUrl}/material/ingreso/all/${id}`);
+  }
+
+  actualizarIngreso(mu: MaterialIngreso): Observable<MaterialIngreso> {
+    return this.http.put<MaterialIngreso>(`${this.baseUrl}/material/ingreso`, mu);
+  }
+
+  getMateriaIngresoId(id: number): Observable<MaterialIngreso> {
+    return this.http.get<MaterialIngreso>(`${this.baseUrl}/material/ingreso/${id}`);
+  }
+
+
+  eliminarIngresoId(id: number): Observable<any> {
+    return this.http.delete<any>(`${this.baseUrl}/material/ingreso/${id}`);
+  }
+	
 	
 
 }

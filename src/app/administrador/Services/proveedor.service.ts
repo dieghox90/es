@@ -30,4 +30,8 @@ export class ProveedorService {
     return this.http.get<Proveedor>(`${this.baseUrl}/proveedor/${id}`);
   }
 
+  filtraProveedores(termino:string): Observable<Proveedor[]> {
+    return this.http.get<Proveedor[]>(`${this.baseUrl}/proveedor/busqueda/${termino}`);
+  }
+
 }

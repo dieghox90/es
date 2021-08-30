@@ -9,6 +9,7 @@ import { ListaProveedoresComponent } from './proveedores/lista-proveedores/lista
 import { ListaComponent } from './materiales/lista/lista.component';
 import { MaterialTipoComponent } from './materiales/material-tipo/material-tipo.component';
 import { MaterialUnidadComponent } from './materiales/material-unidad/material-unidad.component';
+import { RolesComponent } from './usuarios/roles/roles.component';
 
 
 
@@ -20,7 +21,8 @@ import { MaterialUnidadComponent } from './materiales/material-unidad/material-u
     ListaProveedoresComponent,
     ListaComponent,
     MaterialTipoComponent,
-    MaterialUnidadComponent
+    MaterialUnidadComponent,
+    RolesComponent
   ],
   imports: [
     CommonModule,

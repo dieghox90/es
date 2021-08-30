@@ -1,0 +1,376 @@
+<h1 class="titulos"> Mi Perfil</h1>
+
+
+<div class="row ml-1 mb-3">
+
+    <button class="btn btn-success btn-sm" data-toggle="modal" data-target="#staticBackdrop">
+        <span class="fas fa-address-card"></span>
+        Editar Datos
+    </button>
+
+    <button data-toggle="modal" data-target="#modalClaveActual"  class="btn btn-warning btn-sm ml-2">
+        <span class="fas fa-key"></span>
+        Cambiar Clave
+    </button>
+</div>
+
+
+
+<div class="row">
+
+    <div class="col-lg-6">
+
+        <div class="card">
+
+            <div class="card-header bg-primary text-white">
+                Datos Personales
+            </div>
+
+
+            <div class="card-body">
+
+                <div class="form-group">
+
+                    <label for="">Nombres</label>
+                    <hr>
+                    <br>
+                    <p class="dato">
+                        {{usuario.nombres}}
+                    </p>
+
+                </div>
+
+                <div class="form-group">
+
+                    <label for="">Apellidos</label>
+                    <hr>
+                    <br>
+                    <p class="dato">
+                        {{usuario.apellidos}}
+                    </p>
+
+                </div>
+
+                <div class="form-group">
+
+                    <label for="">Cédula</label>
+                    <hr>
+                    <br>
+                    <p class="dato">
+                        {{usuario.cedula}}
+                    </p>
+
+                </div>
+
+                <div class="form-group">
+                    <label for="">Correo</label>
+                    <hr>
+                    <br>
+                    <p class="dato">
+                        {{usuario.correo}}
+                    </p>
+
+                </div>
+
+                <div class="form-group">
+                    <label for="">Celular</label>
+                    <hr>
+                    <br>
+                    <p class="dato">
+                        {{usuario.celular}}
+                    </p>
+
+                </div>
+
+            </div>
+
+
+        </div>
+
+    </div>
+
+
+    <div class="col-lg-6">
+
+
+        <div class="card" id="cardDireccion">
+
+            <div class="card-header bg-info text-white">
+                Dirección
+            </div>
+
+
+            <div class="card-body">
+
+                <div class="form-group">
+                    <label for="">Provincia</label>
+                    <hr>
+                    <br>
+                    <p class="dato">
+                        {{usuario.direccion?.provincia}}
+                    </p>
+                </div>
+
+                <div class="form-group">
+                    <label for="">Cantón o Ciudad</label>
+                    <hr>
+                    <br>
+                    <p class="dato">
+                        {{usuario.direccion?.ciudad}}
+                    </p>
+                </div>
+
+                <div class="form-group">
+                    <label for="">Dirección</label>
+                    <hr>
+                    <br>
+                    <p class="dato">
+                        {{usuario.direccion?.direccion}}
+                    </p>
+                </div>
+
+            </div>
+
+
+        </div>
+
+    </div>
+
+</div>
+
+
+
+<!-- -------- MODAL DATOS PERFIL------------  -->
+<div class="modal fade" id="staticBackdrop" data-backdrop="static" data-keyboard="false" tabindex="-1"
+    aria-labelledby="staticBackdropLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header text-center">
+                <h5 class="modal-title w-100 text-center" id="staticBackdropLabel">Editar Mi Perfil</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+
+                <form (ngSubmit)="actualizar()" [formGroup]="miFormulario">
+
+                    <div class="row">
+
+                        <div class="col-lg-6">
+                            <div class="card">
+
+                                <div class="card-header bg-secondary text-white">
+
+                                    Mis Datos
+                                </div>
+
+                                <div class="card-body">
+
+                                    <div class="form-group">
+                                        <label for="nombres">Nombres:*</label>
+                                        <input formControlName="nombres" type="text" class="form-control" id="nombres"
+                                            name="nombres">
+                                        <span *ngIf="campoNoEsValido('nombres')" class="form-text text-danger msgError">
+                                            Nombres: Campo Obligatorio
+                                        </span>
+                                    </div>
+
+
+                                    <div class="form-group">
+                                        <label for="apellidos">Apellidos:*</label>
+                                        <input formControlName="apellidos" type="text" class="form-control"
+                                            id="apellidos" name="apellidos">
+                                        <span *ngIf="campoNoEsValido('apellidos')"
+                                            class="form-text text-danger msgError">
+                                            Apellidos: Campo Obligatorio
+                                        </span>
+                                    </div>
+
+
+                                    <div class="form-group">
+                                        <label for="correo">Cédula:*</label>
+                                        <input formControlName="cedula" type="text" class="form-control" id="cedula"
+                                            name="cedula">
+                                        <span *ngIf="campoNoEsValido('cedula')" class="form-text text-danger msgError">
+                                            Cédula: Campo Obligatorio
+                                        </span>
+                                    </div>
+
+                                    <div class="form-group">
+                                        <label for="correo">Correo:*</label>
+                                        <input formControlName="correo" type="text" class="form-control" id="correo"
+                                            name="correo">
+                                        <span *ngIf="campoNoEsValido('correo')" class="form-text text-danger msgError">
+                                            Correo: Campo Obligatorio
+                                        </span>
+                                    </div>
+
+
+                                    <div class="form-group">
+                                        <label for="celular">Celular:*</label>
+                                        <input formControlName="celular" type="text" class="form-control" id="celular"
+                                            name="celular">
+                                        <span *ngIf="campoNoEsValido('celular')" class="form-text text-danger msgError">
+                                            Celular: Campo Obligatorio
+                                        </span>
+                                    </div>
+                                </div>
+
+
+                            </div>
+                        </div>
+
+                        <div class="col-lg-6">
+                            <div class="card">
+
+                                <div class="card-header bg-secondary text-white">
+
+                                    Dirección
+                                </div>
+
+                                <div class="card-body" formGroupName="direccion">
+                                    <div class="form-group">
+                                        <label for="provincia">Provincia:*</label>
+                                        <input formControlName="provincia" type="text" class="form-control"
+                                            id="provincia" name="provincia">
+
+                                        <span *ngIf="campoNoValidoDireccion('direccion.provincia')"
+                                            class="form-text text-danger msgError">
+                                            Provincia: Campo Obligatorio
+                                        </span>
+                                    </div>
+
+                                    <div class="form-group">
+                                        <label for="ciudad">Ciudad:*</label>
+                                        <input formControlName="ciudad" type="text" class="form-control" id="ciudad"
+                                            name="ciudad">
+                                        <span *ngIf="campoNoValidoDireccion('direccion.provincia')"
+                                            class="form-text text-danger msgError">
+                                            Ciudad: Campo Obligatorio
+                                        </span>
+
+                                    </div>
+
+                                    <div class="form-group">
+                                        <label for="direccion">Dirección/Barrio/Calles:*</label>
+                                        <input formControlName="direccion" type="text" class="form-control"
+                                            id="direccion" name="direccion">
+                                        <span *ngIf="campoNoValidoDireccion('direccion.provincia')"
+                                            class="form-text text-danger msgError">
+                                            Direccion: Campo Obligatorio
+                                        </span>
+
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+
+
+                    <div class="modal-footer">
+
+                        <button type="submit" class="btn btn-info btn-md">
+                            <span class="fas fa-download"></span> Actualizar
+                        </button>
+
+
+
+                        <button type="button" class="btn btn-danger" data-dismiss="modal">
+                            <span class="fas fa-times-circle"></span> Cancelar
+                        </button>
+
+                    </div>
+
+                </form>
+
+
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+<!-- -------- MODAL CLAVE ACTUAL------------  -->
+<div class="modal fade" id="modalClaveActual" data-backdrop="static" data-keyboard="false" tabindex="-1"
+    aria-labelledby="staticBackdropLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header text-center">
+                <h5 class="modal-title w-100 text-center" id="staticBackdropLabel">Editar Mi Perfil</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+
+    
+
+                    <div class="form-group">
+                        <label for="claveActual"> Clave actual</label>
+                        <input [(ngModel)]="claveActual" class="form-control" id="claveActual" name="claveActual">
+                    </div>
+
+
+
+                    <div class="modal-footer">
+
+                        <button (click)="compararClaveActual()" type="submit" class="btn btn-info btn-md">
+                            <span class="fas fa-arrow-circle-right"></span> Continuar
+                        </button>
+
+                        <button type="button" class="btn btn-danger" data-dismiss="modal">
+                            <span class="fas fa-times-circle"></span> Cancelar
+                        </button>
+
+                    </div>
+
+
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+<!---CONTRASEÑAS  -->
+<div class="modal fade" id="modalClaveNueva" tabindex="-1">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Restablecer Contraseña</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+
+                <div class="form-group">
+                    <label for="codigo">Contraseña:</label>
+                    <input type="text"  [(ngModel)]="clave1" class="form-control" id="clave1" name="clave1">
+                </div>
+
+                <div class="form-group">
+                    <label for="codigo">Repetir Contraseña:</label>
+                    <input #inputFilter (keyup)="compararClaves($event)" type="text"  [(ngModel)]="clave2" class="form-control" id="clave2" name="clave2">
+
+                    <div *ngIf="show && bandera" [class.text-success]="bandera">
+                        Las contraseñas coinciden
+                    </div>
+
+                    <div *ngIf="show && !bandera" [class.text-danger]="!bandera">
+                        Las contraseñas no coinciden
+                    </div>
+                </div>
+                
+            
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Cerrar</button>
+                <button (click)="cambiarClave()" type="button" class="btn btn-primary">Aceptar</button>
+            </div>
+        </div>
+    </div>
+</div>

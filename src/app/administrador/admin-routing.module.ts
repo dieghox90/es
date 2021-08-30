@@ -7,6 +7,7 @@ import { FormUsuarioComponent } from './usuarios/form-usuario/form-usuario.compo
 import { ListaUsuariosComponent } from './usuarios/lista-usuarios/lista-usuarios.component';
 import { FormProveedorComponent } from './proveedores/form-proveedor/form-proveedor.component';
 import { ListaProveedoresComponent } from './proveedores/lista-proveedores/lista-proveedores.component';
+import { RolesComponent } from './usuarios/roles/roles.component';
 
 
 const routes: Routes = [
@@ -52,6 +53,10 @@ const routes: Routes = [
       {
         path: 'material-tipo',
         component: MaterialTipoComponent
+      },
+      {
+        path: 'roles',
+        component: RolesComponent
       },
       {
         path: '**',

@@ -1,5 +1,5 @@
 <nz-layout class="app-layout">
-  <nz-sider [class.hid]="ocultar" class="menu-sidebar" nzCollapsible nzWidth="256px" nzBreakpoint="md"
+  <nz-sider  [class.hid]="ocultar" class="menu-sidebar" nzCollapsible nzWidth="256px" nzBreakpoint="md"
     [(nzCollapsed)]="isCollapsed" [nzTrigger]="null">
     <div class="sidebar-logo">
       <a href="https://ng.ant.design/" target="_blank">
@@ -7,8 +7,9 @@
         <h1>Elegant Sport</h1>
       </a>
     </div>
+    
     <ul nz-menu nzTheme="dark" nzMode="inline" [nzInlineCollapsed]="isCollapsed">
-      <li nz-submenu nzOpen nzTitle="Usuarios" nzIcon="team">
+      <li *ngIf="authService?.hasRole('ROLE_ADMINISTRADOR') || authService?.hasRole('ROLE_EMPLEADO')" nz-submenu nzTitle="{{authService?.hasRole('ROLE_ADMINISTRADOR')? 'Usuarios':'Clientes' }}" nzIcon="team">
         <ul>
           <li nz-menu-item nzMatchRouter>
             <a routerLink="/admin/nuevo-usuario"> <span class="fa fa-user-plus"></span> Nuevo</a>
@@ -17,12 +18,16 @@
             <a routerLink="/admin/lista-usuarios"> <span class="fa fa-users"></span> Listado</a>
           </li>
 
-          <li nz-menu-item nzMatchRouter>
+          <li *ngIf="authService?.hasRole('ROLE_ADMINISTRADOR')" nz-menu-item nzMatchRouter>
             <a routerLink="/admin/usuarios-inactivos"> <span class="fa fa-user-times"></span> Inactivos</a>
+          </li>
+
+          <li *ngIf="authService?.hasRole('ROLE_ADMINISTRADOR')" nz-menu-item nzMatchRouter>
+            <a routerLink="/admin/roles"> <span class="fa fa-user-tag"></span> Roles</a>
           </li>
         </ul>
       </li>
-      <li nz-submenu nzOpen nzTitle="Proveedores" nzIcon="branches">
+      <li *ngIf="authService?.hasRole('ROLE_ADMINISTRADOR') || authService?.hasRole('ROLE_EMPLEADO')" nz-submenu nzTitle="Proveedores" nzIcon="branches">
         <ul>
           <li nz-menu-item nzMatchRouter>
             <a routerLink="/admin/nuevo-proveedor"><span class="fa fa-plus"></span> Nuevo</a>
@@ -33,7 +38,7 @@
           </li>
         </ul>
       </li>
-      <li nz-submenu nzOpen nzTitle="Inventario" nzIcon="align-center">
+      <li *ngIf="authService?.hasRole('ROLE_ADMINISTRADOR') || authService?.hasRole('ROLE_EMPLEADO')" nz-submenu nzTitle="Inventario" nzIcon="align-center">
         <ul>
           <li nz-menu-item nzMatchRouter>
             <a routerLink="/admin/inventario"><span class="fa fa-list-alt"></span> Materiales</a>
@@ -49,16 +54,19 @@
         </ul>
       </li>
 
-      <li nz-submenu nzOpen nzTitle="Productos - Pedidos" nzIcon="shopping">
+      <li *ngIf="authService?.hasRole('ROLE_ADMINISTRADOR') || authService?.hasRole('ROLE_EMPLEADO')" nz-submenu nzTitle="Productos - Pedidos" nzIcon="shopping">
         <ul>
+
+
+          <li nz-menu-item nzMatchRouter>
+            <a routerLink="/shared/nuevo-producto"><span class="fa fa-folder-plus"></span> Nuevo Producto</a>
+          </li>
 
           <li nz-menu-item nzMatchRouter>
             <a routerLink="/shared/producto-tipo"><span class="fa fa-folder-plus"></span> Tipo Producto</a>
           </li>
 
-          <li nz-menu-item nzMatchRouter>
-            <a routerLink="/shared/nuevo-producto"><span class="fa fa-folder-plus"></span> Nuevo Producto</a>
-          </li>
+   
 
 
           <li nz-menu-item nzMatchRouter>
@@ -66,28 +74,47 @@
           </li>
         </ul>
       </li>
+
+     
+        <ul *ngIf="authService?.hasRole('ROLE_CLIENTE')">
+          <li nz-menu-item nzMatchRouter>
+            <a routerLink="/shared/ver-producto"><span class="fa fa-folder-plus"></span> Productos </a>
+          </li>
+
+          <li nz-menu-item nzMatchRouter>
+            <a routerLink="/shared/listar-productos"><span class="fa fa-tshirt"></span> Mis compras </a>
+          </li>
+
+        </ul>
+     
     </ul>
   </nz-sider>
   <nz-layout>
-    <nz-header>
+    <nz-header >
 
       <div class="app-header">
         <span class="header-trigger" (click)="isCollapsed = !isCollapsed">
           <i class="trigger" nz-icon [nzType]="isCollapsed ? 'menu-unfold' : 'menu-fold'"></i>
+      
+        </span>
+        <span style="margin-left: -15px;"> 
+          {{authService?.hasRole('ROLE_ADMINISTRADOR')? 'Administrador':'' }}
+          {{authService?.hasRole('ROLE_EMPLEADO')? 'Empleado':'' }}
+          {{authService?.hasRole('ROLE_CLIENTE')? 'Cliente':'' }}
         </span>
 
         <div style="float:right;padding-right: 10px;">
-          {{this.apellidos}} {{this.nombres}}
+          {{this.serviceLayout._apellidos}} {{this.serviceLayout._nombres}}
 
           <div class="btn-group">
             <button type="button" class="btn btn-sm btn-secondary dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
         
             </button>
             <div class="dropdown-menu dropdown-menu-right">
-              <button class="btn-sm dropdown-item" type="button">
+              <a routerLink="/shared/perfil" class="btn-sm dropdown-item" type="button">
                <span class="fas fa-user-cog"></span> Mis Datos
-              </button>
-              <button (click)="logout() " class="btn-sm dropdown-item" type="button">
+              </a>
+              <button (click)="logout()" class="btn-sm dropdown-item" type="button">
                 <span class="fas fa-sign-out-alt"></span>Salir
               </button>
             </div>

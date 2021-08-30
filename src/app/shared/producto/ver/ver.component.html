@@ -1,0 +1,38 @@
+<h1 class="titulos"> Productos </h1>
+
+
+<div class="row">
+
+
+
+
+    <div class="col-md-4" *ngFor="let producto of productos">
+
+        <div class="card  ">
+
+            <div class="card-header text-white bg-primary">
+                {{producto.nombre}}
+            </div>
+
+            <div class="card-body ">
+
+                <img *ngIf="producto.files.length > 0" style="width:100%" [src]="urlBaseImg+producto.files[0]?.nombreArchivo" alt="">
+                <img *ngIf="producto.files.length==0" style="width:100%"  src="{{'/assets/img/no.png'}}" class="img-fluid">
+
+                <div class="mt-2 font-weight-bold">Descripción</div>
+                <hr style="margin-top: 2px;margin-bottom: 2px;">
+                {{producto.descripcion}}
+
+                <div class="mt-2 font-weight-bold">Precio</div>
+                <hr style="margin-top: 2px;margin-bottom: 2px;">
+                <div class="text-center">{{producto.precio}}</div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+
+
+</div>

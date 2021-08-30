@@ -1,3 +1,4 @@
+import { LayoutService } from './shared/Services/layout.service';
 import { AfterViewInit, Component, OnInit } from '@angular/core';
 import { ActivatedRoute, NavigationEnd, Router } from '@angular/router';
 import { filter } from 'rxjs/operators';
@@ -15,8 +16,11 @@ export class AppComponent implements OnInit {
   apellidos: string | null;
 
   ocultar:boolean= false;
-  constructor(private router: Router, private route: ActivatedRoute,
-  private authService:AuthService) {
+  constructor(private router: Router,
+    private route: ActivatedRoute,
+    public serviceLayout:LayoutService,
+    public authService: AuthService,
+  public laoutService:LayoutService) {
     
   }
 
@@ -31,8 +35,9 @@ export class AppComponent implements OnInit {
         this.ocultar = true;
       } else {
         this.ocultar = false;
-        this.nombres = sessionStorage.getItem('nombres');
-        this.apellidos = sessionStorage.getItem('apellidos');
+        this.serviceLayout.obtenerDatos();
+        this.nombres = this.serviceLayout._nombres;
+        this.apellidos = this.serviceLayout._apellidos;
       }
     });
 

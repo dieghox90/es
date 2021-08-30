@@ -14,7 +14,7 @@ export class Usuario {
   username: string;
   password: string;
   codigoRecuperacion: string;
-  roles: Rol[];
+  roles:Rol[]=[];
 
 // -- Para los Authorities del login
   rolesAuth: String[] = [];

@@ -3,8 +3,10 @@ import { CommonModule } from '@angular/common';
 import { ListaProductosComponent } from './producto/lista-productos/lista-productos.component';
 import { TipoProductoComponent } from './producto/tipo-producto/tipo-producto.component';
 import { FormProductoComponent } from './producto/form-producto/form-producto.component';
-import { ReactiveFormsModule } from '@angular/forms';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { SharedRoutingModule } from './shared-routing.module';
+import { PerfilComponent } from './perfil/perfil.component';
+import { VerComponent } from './producto/ver/ver.component';
 
 
 
@@ -13,12 +15,15 @@ import { SharedRoutingModule } from './shared-routing.module';
   declarations: [
     ListaProductosComponent,
     TipoProductoComponent,
-    FormProductoComponent
+    FormProductoComponent,
+    PerfilComponent,
+    VerComponent
   ],
   imports: [
     CommonModule,
     SharedRoutingModule,
-    ReactiveFormsModule
+    ReactiveFormsModule,
+    FormsModule,
   ]
 })
 export class SharedModule { }

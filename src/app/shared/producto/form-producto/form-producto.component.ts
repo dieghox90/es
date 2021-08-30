@@ -57,15 +57,21 @@ export class FormProductoComponent implements OnInit {
 
   activarEntrega = false;
 
+  activarCliente = false;
+
 
 
 
   // ---- Asociado al input de busqueda-----
-  @ViewChild('inputFilter', { static: true }) inputElementSearch: ElementRef
+  @ViewChild('inputFilter') inputElementSearch;
 
   // ------
 
   @ViewChild('entrega', { static: true }) checkInput: ElementRef;
+
+
+
+  @ViewChild('clienteInput', { static: true }) checkInputCliente: ElementRef;
 
   // --- Mapa -----
   @ViewChild('mapa') divMapa!: ElementRef
@@ -74,12 +80,12 @@ export class FormProductoComponent implements OnInit {
   zoomLevel: number = 15;
   center: [number, number] = [-79.21809479715685, -3.9597029329109743];
 
-
+  
   miFormulario: FormGroup = this.fb.group({
     nombre: ['', [Validators.required]],
     descripcion: [''],
-    cantidad: ['', [Validators.required]],
-    precio: ['', [Validators.required]],
+    cantidad: ['', [Validators.required,Validators.pattern(/\-?\d*\.?\d{1,2}/)]],
+    precio: ['', [Validators.required,Validators.pattern(/\-?\d*\.?\d{1,2}/)]],
     producto_tipo: ['', [Validators.required]],
     direccion_entrega: this.fb.group({
       provincia: [''],
@@ -121,29 +127,39 @@ export class FormProductoComponent implements OnInit {
       .subscribe(p => {
         this.isEdit = p.id;
         this.miFormulario.patchValue(p);
+
+        this.miFormulario.controls["producto_tipo"].patchValue(this.tipos.find(pr => pr.id ===p.producto_tipo.id));
+
         this.producto = p;
 
-        this.usuario = p.usuario;
+       // this.usuario = p.usuario;
         
        
 
-        if (p.usuario.id != null) {
-          this.inputElementSearch.nativeElement.value = p.usuario.apellidos + " " + p.usuario.nombres;
-        } 
+        if (p.usuario?.id != null) {
+          this.activarCliente = true;
+          this.inputElementSearch.nativeElement.value = p?.usuario?.apellidos + " " + p?.usuario?.nombres;
+          this.checkInputCliente.nativeElement.checked = true;
+          
+        } else {
+          this.activarCliente = false;
+          this.checkInputCliente.nativeElement.checked = false ;
+        }
 
         
           this.archivos = p.files;
         
-
-        if (p.direccion_entrega.id != null) {
+        if (p.direccion_entrega?.provincia != "") {
 
           this.marker.setLngLat([p.direccion_entrega.longitud, p.direccion_entrega.latitud]);
           this.mapa.setCenter([p.direccion_entrega.longitud, p.direccion_entrega.latitud]);
           this.activarEntrega = true;
           this.miFormulario.controls["producto_tipo"].patchValue(this.tipos.find(el => el.id === p.producto_tipo.id));
           this.checkInput.nativeElement.checked = true;
-        }
+        } 
       });
+
+  
 
   }
 
@@ -208,7 +224,6 @@ export class FormProductoComponent implements OnInit {
 
 
 
-    this.producto.files = this.archivos;
 
 
     if (this.activarEntrega) {
@@ -217,64 +232,92 @@ export class FormProductoComponent implements OnInit {
     }
 
 
-    this.producto.usuario = this.usuario;
+    //this.producto.usuario = this.usuario;
+
+    if (this.activarCliente == true) {
+      if (this.usuario.id == null) {
+        this.toastr.warning('Ha marcado la opción Pedido por cliente, per no ha seleccionado ningún Cliente', 'Aviso')
+        return;
+      } else {
+        this.producto.usuario = new Usuario();
+        this.producto.usuario.id = this.usuario.id;
+
+      }
+    } else {
+      this.producto.se_vende = true; //productos que no pertenecen a un cliente mediante pedido
+    }
+
+
     // ----- Para actualizAr o guardar -----    
 
     if (this.isEdit != 0) {
       //------- ACTUALIZAMOS ---------
       this.producto.id = this.isEdit;
-      console.log(this.producto);
-      this.archivos = this.producto.files;
+      //this.archivos = this.producto.files;
+      let fotosAux = this.producto.files;
       this.producto.files = [];
       this.service.actualizar(this.producto).subscribe(u => {
 
 
-        this.producto.files = this.archivos; 
-      
-        this.service.subirImagenes(this.producto).subscribe(p => {
+        if (this.archivos?.length > 0) {
 
-          Swal.fire({
-            position: 'center',
-            icon: 'success',
-            title: 'Actualizacion',
-            html: "Prducto <strong>" + u.nombre + "</strong> Actualizado con éxito",
-            showConfirmButton: true,
-            timer: 1200
+          this.archivos.forEach(ar => {
+            this.producto.files.push(ar);
           });
 
-  
-         if (p.files != null) {
-            this.archivos = p.files;
-          } else {
-           this.archivos= this.producto.files;  
-          }
+          fotosAux?.forEach(ar => {
+            this.producto.files.push(ar);
+          });
 
+          
+          console.log(this.producto);
+
+         this.service.subirImagenes(this.producto).subscribe(p => {
+            this.producto = p;
+          });
+        
+        }
+
+
+        Swal.fire({
+          position: 'center',
+          icon: 'success',
+          title: 'Actualización',
+          html: "Producto <strong>" + u.nombre + "</strong> Actualizado con éxito",
+          showConfirmButton: true,
+          timer: 1200
         });
 
-    
-  
-        // this.producto = u;
-        // this.archivos = u.files;
+        this.router.navigate(['/shared/listar-productos']);
+
       });
 
     } else {
 
       //--------- GUARDAMOS -------------
       const date = new Date();
-      //this.material.fecha_creacion = this.datePipe.transform(date, "yyyy-MM-dd'T'HH:mm:ss")?.toString();
-      console.log(this.producto);
-      this.producto.usuario = new Usuario();
-      this.producto.usuario.id = this.usuario.id;
-      this.service.agregar(this.producto).subscribe(u => {
+      //this.material.fecha_creacion = this.datePipe.transform(date, "yyyy-MM-dd'T'HH:mm:ss")?.toString();  
+      this.producto.files = [];
+      this.service.guardarSinImagen(this.producto).subscribe(u => {
         Swal.fire({
           position: 'center',
           icon: 'success',
           title: 'Registro',
-          html: "Material <strong>" + this.producto.nombre + "</strong> Registrado con éxito",
+          html: "Producto <strong>" + this.producto.nombre + "</strong> Registrado con éxito",
           showConfirmButton: true,
           timer: 1200
+        });
+
+        if (this.archivos?.length > 0) {
+          this.producto = u;
+          
+          this.producto.files = this.archivos;
+          this.service.subirImagenes(this.producto).subscribe(p => {
+            this.producto = p;
+          });
+        
         }
-        );
+
         this.miFormulario.reset();
         this.miFormulario.controls["producto_tipo"].patchValue('');
         this.producto = new Producto;
@@ -282,10 +325,11 @@ export class FormProductoComponent implements OnInit {
         this.producto.direccion_entrega = new Direccion();
         this.producto.producto_tipo = new ProductoTipo();
         this.archivos = [];
-        this.activarEntrega = false;
         this.inputElementSearch.nativeElement.value = "";
-
         this.producto = u;
+        this.router.navigate(['/shared/listar-productos']);
+        this.activarEntrega = false;
+        this.activarCliente = false;
       });
     }
 
@@ -358,6 +402,7 @@ export class FormProductoComponent implements OnInit {
 
 
   filtrarClientes(event: any) {
+    
     if (event.target.value != '') {
       this.service.filtrarClientes(event.target.value).subscribe(m => {
         console.log(m);
@@ -373,6 +418,7 @@ export class FormProductoComponent implements OnInit {
       });
     } else {
       this.usuariosFiltrados = [];
+      this.usuario = new Usuario();
     }
 
 
@@ -382,8 +428,7 @@ export class FormProductoComponent implements OnInit {
     // this.archivos = [];
     this.usuariosFiltrados = [];
     this.usuario = u;
-    this.producto.usuario = u;
-    console.log(this.producto.usuario.id);
+   // this.producto.usuario = u;
 
     //this.archivos = m.files;
     this.inputElementSearch.nativeElement.value = u.apellidos + " " + u.nombres;
@@ -480,6 +525,16 @@ export class FormProductoComponent implements OnInit {
     }
   }
 
+
+
+  onCheckboxChangeCliente(event: any) {
+    if (event.target.checked) {
+      this.activarCliente = true;
+      // this.miFormulario.get('direccion_entrega.provincia')?.setValidators([Validators.required]);
+    } else {
+      this.activarCliente = false;
+    }
+  }
 
 
 
