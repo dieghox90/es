@@ -1,6 +1,6 @@
 
 import { HttpClient } from '@angular/common/http';
-import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
+import { AfterContentInit, AfterViewInit, Component, ElementRef, OnInit, ViewChild } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { ToastrService } from 'ngx-toastr';
@@ -31,7 +31,7 @@ declare var $: any;
   templateUrl: './form-producto.component.html',
   styleUrls: ['./form-producto.component.css']
 })
-export class FormProductoComponent implements OnInit {
+export class FormProductoComponent implements OnInit, AfterViewInit  {
 
 
   isEdit: number = 0;
@@ -65,6 +65,9 @@ export class FormProductoComponent implements OnInit {
   // ---- Asociado al input de busqueda-----
   @ViewChild('inputFilter') inputElementSearch;
 
+  //@ViewChild('inputFilter', {static: true}) inputElementSearch: ElementRef;
+
+
   // ------
 
   @ViewChild('entrega', { static: true }) checkInput: ElementRef;
@@ -78,11 +81,12 @@ export class FormProductoComponent implements OnInit {
   mapa: mapboxgl.Map;
   marker: any;
   zoomLevel: number = 15;
-  center: [number, number] = [-79.21809479715685, -3.9597029329109743];
+  center: [number, number] = [-78.7638587,  -3.828434];
 
   
   miFormulario: FormGroup = this.fb.group({
     nombre: ['', [Validators.required]],
+    us: [''],
     descripcion: [''],
     cantidad: ['', [Validators.required,Validators.pattern(/\-?\d*\.?\d{1,2}/)]],
     precio: ['', [Validators.required,Validators.pattern(/\-?\d*\.?\d{1,2}/)]],
@@ -107,8 +111,9 @@ export class FormProductoComponent implements OnInit {
     this.producto.direccion_entrega = new Direccion();
     this.producto.producto_tipo = new ProductoTipo();
   }
+ 
 
-  ngOnInit(): void {
+  ngOnInit(): void {  
 
     this.serviceTipo.listar().subscribe(t => {
       this.tipos = t;
@@ -133,20 +138,9 @@ export class FormProductoComponent implements OnInit {
         this.producto = p;
 
        // this.usuario = p.usuario;
-        
-       
-
-        if (p.usuario?.id != null) {
-          this.activarCliente = true;
-          this.inputElementSearch.nativeElement.value = p?.usuario?.apellidos + " " + p?.usuario?.nombres;
-          this.checkInputCliente.nativeElement.checked = true;
-          
-        } else {
-          this.activarCliente = false;
-          this.checkInputCliente.nativeElement.checked = false ;
-        }
-
-        
+   
+       console.log("NGONINIT");
+       console.log(this.producto)
           this.archivos = p.files;
         
         if (p.direccion_entrega?.provincia != "") {
@@ -157,11 +151,34 @@ export class FormProductoComponent implements OnInit {
           this.miFormulario.controls["producto_tipo"].patchValue(this.tipos.find(el => el.id === p.producto_tipo.id));
           this.checkInput.nativeElement.checked = true;
         } 
-      });
+
+        if (this.producto.usuario?.id != null) {
+
+          console.log(this.producto);
+            this.activarCliente = true;
+            this.checkInputCliente.nativeElement.checked = true;
+           //this.inputElementSearch.nativeElement.value = this.producto.usuario?.apellidos + " " + this.producto.usuario?.nombres;
+         // this.usuario = this.producto.usuario;
+            this.miFormulario.controls["us"].patchValue(this.producto.usuario?.apellidos + " " + this.producto.usuario?.nombres);
+          
+          
+        } else {
+          this.activarCliente = false;
+          this.checkInputCliente.nativeElement.checked = false ;
+        }
 
   
+      });
+    
+    
+    
+  
 
+         
   }
+
+
+
 
 
   ngAfterViewInit(): void {
@@ -204,6 +221,7 @@ export class FormProductoComponent implements OnInit {
     });
 
 
+    
   }
 
 

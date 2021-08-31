@@ -295,7 +295,7 @@ export class ListaComponent implements OnInit {
         } else {
           this.materialesFiltrados = [];
           const mate: Material = new Material();
-          mate.nombre = "No se ecnontraron registros";
+          mate.nombre = "No se encontraron registros";
           this.materialesFiltrados.push(mate);
         }
 

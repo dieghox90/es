@@ -42,8 +42,7 @@ export class FormProveedorComponent implements OnInit, AfterViewInit, OnDestroy 
   mapa: mapboxgl.Map;
   marker: any;
   zoomLevel: number = 15;
-  center: [number, number] = [-79.21809479715685, -3.9597029329109743];
-
+  center: [number, number] = [-78.7638587,  -3.828434];
 
 
   miFormulario: FormGroup = this.fb.group({
