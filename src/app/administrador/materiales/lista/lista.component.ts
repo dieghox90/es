@@ -149,8 +149,6 @@ export class ListaComponent implements OnInit {
     }
 
 
-    
-
     // ----- Para actualizar o guardar -----
 
     if (this.isEdit != 0) {

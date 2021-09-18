@@ -7,6 +7,7 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { SharedRoutingModule } from './shared-routing.module';
 import { PerfilComponent } from './perfil/perfil.component';
 import { VerComponent } from './producto/ver/ver.component';
+import { AsistenciasComponent } from './asistencias/asistencias.component';
 
 
 
@@ -17,7 +18,8 @@ import { VerComponent } from './producto/ver/ver.component';
     TipoProductoComponent,
     FormProductoComponent,
     PerfilComponent,
-    VerComponent
+    VerComponent,
+    AsistenciasComponent
   ],
   imports: [
     CommonModule,
@@ -26,4 +28,5 @@ import { VerComponent } from './producto/ver/ver.component';
     FormsModule,
   ]
 })
+  
 export class SharedModule { }

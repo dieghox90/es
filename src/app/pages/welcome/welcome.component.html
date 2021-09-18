@@ -9,4 +9,66 @@
     <p>Para realizar cualquier actividad con el sistema, por favor utilice el menú de la izquierda.</p>
     <p style="font-style: oblique;">Somos Elgant Sport, ubicados en Yantzaza - Zamora Chinchipe, en las calles 18 de noviembre y Zamora, teléfono 099 875 3337</p>
 
+
+    <hr>
+    <h4 class="text-left">Asistencia</h4>
+    <button *ngIf="asistencia?.fecha_ingreso==null" (click)="abrirEntrada()" class="btn btn-info btn-sm m-1">
+        Registrar Entrada
+    </button>
+
+    
+    <button *ngIf="asistencia?.fecha_salida==null && asistencia?.fecha_ingreso!=null" (click)="abrirSalida()" class="btn btn-primary btn-sm m-1">
+        Registrar Salida
+    </button>
+
+    <table class="table table-striped mt-3">
+
+        <thead>
+            <tr>
+
+                <th>
+                    Día
+                </th>
+
+                <th>
+                    Hora de entrada
+                </th>
+
+                <th>
+                    Hora de salida
+                </th>
+            </tr>
+        </thead>
+
+        <tbody>
+
+            <tr>
+                <td>
+                    {{asistencia?.fecha_registro | date:'EEEE, d MMMM y'}}
+                </td>
+                <td>
+                    <div *ngIf="asistencia?.fecha_ingreso!=null">
+                        {{asistencia?.fecha_ingreso | date:'HH:mm' }}
+                    </div>
+
+                    <div class="bg-warning" *ngIf="asistencia?.fecha_ingreso==null">
+                        Sin Registrar
+                    </div>
+                </td>
+                <td>
+
+                    <div *ngIf="asistencia?.fecha_salida!=null">
+                        {{asistencia?.fecha_salida | date:'HH:mm'}}
+                    </div>
+
+                    <div class="bg-warning" *ngIf="asistencia?.fecha_salida==null">
+                        Sin Registrar
+                    </div>
+
+                </td>
+            </tr>
+        </tbody>
+
+    </table>
+
 </div>

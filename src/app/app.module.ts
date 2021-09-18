@@ -1,14 +1,14 @@
 import { LoginComponent } from './login/login/login.component';
 
 
-import { NgModule } from '@angular/core';
+import { LOCALE_ID, NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { NZ_I18N } from 'ng-zorro-antd/i18n';
 import { en_US } from 'ng-zorro-antd/i18n';
-import { registerLocaleData } from '@angular/common';
+import { CommonModule, registerLocaleData } from '@angular/common';
 
 import { FormsModule } from '@angular/forms';
 import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
@@ -21,8 +21,11 @@ import { ToastrModule } from 'ngx-toastr';
 import en from '@angular/common/locales/en';
 import { TokenInterceptor } from './interceptors/token.interceptor';
 import { AuthInterceptor } from './interceptors/auth.interceptor';
+import localeES from '@angular/common/locales/es';
 
-registerLocaleData(en);
+//registerLocaleData(en);
+
+registerLocaleData(localeES, 'es');
 
 @NgModule({
   declarations: [
@@ -30,7 +33,7 @@ registerLocaleData(en);
     LoginComponent,
   ],
   imports: [
- 
+    CommonModule,
     BrowserModule,
     AppRoutingModule,
     FormsModule,
@@ -43,7 +46,9 @@ registerLocaleData(en);
     ToastrModule.forRoot()
 
   ],
-  providers: [{ provide: NZ_I18N, useValue: en_US },
+  providers: [
+    //{ provide: NZ_I18N, useValue: en_US },
+    { provide: LOCALE_ID, useValue: 'es' },
     { provide: HTTP_INTERCEPTORS, useClass: TokenInterceptor, multi: true },
     { provide: HTTP_INTERCEPTORS, useClass: AuthInterceptor, multi: true },],
   bootstrap: [AppComponent]

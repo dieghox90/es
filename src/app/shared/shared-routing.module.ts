@@ -1,3 +1,4 @@
+import { AsistenciasComponent } from './asistencias/asistencias.component';
 import { VerComponent } from './producto/ver/ver.component';
 import { PerfilComponent } from './perfil/perfil.component';
 import { ListaProductosComponent } from './producto/lista-productos/lista-productos.component';
@@ -36,6 +37,10 @@ const routes: Routes = [
       {
         path: 'ver-producto',
         component: VerComponent
+      },
+      {
+        path: 'asistencias',
+        component: AsistenciasComponent
       },
     ]
   }
