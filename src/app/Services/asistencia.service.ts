@@ -11,12 +11,12 @@ import { Usuario } from '../Models/usuario';
 })
 export class AsistenciaService {
 
-  private baseUrl: string = environment.baseUrl+"/api";
-  
+  private baseUrl: string = environment.baseUrl + "/api";
+
   constructor(private http: HttpClient) { }
 
-  
-  agregar(asistencia: Asistencia):Observable<Asistencia> {
+
+  agregar(asistencia: Asistencia): Observable<Asistencia> {
     return this.http.post<Asistencia>(`${this.baseUrl}/asistencias`, asistencia);
   }
 
@@ -32,34 +32,43 @@ export class AsistenciaService {
     return this.http.get<Asistencia>(`${this.baseUrl}/asistencias/${id}`);
   }
 
-  getAsistenciaHoy(id:number): Observable<Asistencia> {
+  getAsistenciaHoy(id: number): Observable<Asistencia> {
     return this.http.get<Asistencia>(`${this.baseUrl}/asistencias/hoy/${id}`);
   }
 
   getAsistenciaFiltrarUsuario(id: number, inicio: Date, fin: Date): Observable<Asistencia[]> {
-    
+
     let params = new HttpParams()
-    .set('id', id )
+      .set('id', id)
       .set('inicio', inicio.toDateString())
       .set('fin', fin.toDateString())
-    return this.http.get<Asistencia[]>(`${this.baseUrl}/asistencias/filtrar/usuario/`,{ params: params });
-    
+    return this.http.get<Asistencia[]>(`${this.baseUrl}/asistencias/filtrar/usuario/`, { params: params });
+
   }
 
-  
+
   getAsistenciaFiltrarFechas(inicio: Date, fin: Date): Observable<Asistencia[]> {
-    
+
     let params = new HttpParams()
       .set('inicio', inicio.toDateString())
       .set('fin', fin.toDateString())
-    return this.http.get<Asistencia[]>(`${this.baseUrl}/asistencias/filtrar/fechas/`,{ params: params });
-    
+    return this.http.get<Asistencia[]>(`${this.baseUrl}/asistencias/filtrar/fechas/`, { params: params });
+
   }
 
+
+  public exportar(id: number, inicio: Date, fin: Date): Observable<any> {
+    let params = new HttpParams()
+      .set('id', id)
+      .set('inicio', inicio.toDateString())
+      .set('fin', fin.toDateString())
+    
+    return this.http.get<any>(this.baseUrl + "/asistencias/export", { params: params, responseType: 'blob' as 'json' });
+  }
 
   // ------------------ ASISTENCIAS CONFIGURACIONES------------
 
-  agregarConfiguracion(asistencia: AsistenciaConfiguracion):Observable<AsistenciaConfiguracion> {
+  agregarConfiguracion(asistencia: AsistenciaConfiguracion): Observable<AsistenciaConfiguracion> {
     return this.http.post<AsistenciaConfiguracion>(`${this.baseUrl}/asistencias/configuraciones`, asistencia);
   }
 
@@ -75,8 +84,8 @@ export class AsistenciaService {
     return this.http.delete<any>(`${this.baseUrl}/asistencias/configuraciones/${id}`)
   }
 
-  filtrarEmpleados( termino:string): Observable<Usuario[]> {
+  filtrarEmpleados(termino: string): Observable<Usuario[]> {
     return this.http.get<Usuario[]>(`${this.baseUrl}/usuario-busqueda/${termino}`);
   }
-  
+
 }

@@ -80,13 +80,12 @@
                         <span class="fas fa-search"></span>
                     </span>
                 </div>
-                <input #inputFilter (keyup)="filtrarEmpleados($event)"
-                    placeholder="Buscar por Código o Nombre" type="text" class="form-control"
-                    aria-label="Default" aria-describedby="inputGroup-sizing-default">
+                <input #inputFilter (keyup)="filtrarEmpleados($event)" placeholder="Buscar por Código o Nombre"
+                    type="text" class="form-control" aria-label="Default" aria-describedby="inputGroup-sizing-default">
             </div>
 
-            <div style="position: absolute;width:100%;z-index: 99999; box-shadow: 5px 5px 5px black;"
-                id="list-tab" role="tablist">
+            <div style="position: absolute;width:100%;z-index: 99999; box-shadow: 5px 5px 5px black;" id="list-tab"
+                role="tablist">
 
                 <button type="button" (click)="fijarEmpleadosBusqueda(u)" *ngFor="let u of empleadosFiltrados"
                     class="list-group-item list-group-item-action">
@@ -94,7 +93,7 @@
                 </button>
             </div>
 
-    
+
         </div>
 
         <div class="form-group">
@@ -130,7 +129,13 @@
 
 <div *ngIf="asistencias.length >0" class="mt-3">
 
-    <h4 class="text-left">Registros</h4>
+    
+    <hr>
+
+    <h1 class="text-left">Registros</h1>
+
+    <button class="btn btn-success btn-sm float-right mb-3" (click)="exportar()"> <i class="fas fa-file-excel"></i>
+        Exportar Asistencias</button>
 
     <table class="table table-striped">
 
@@ -187,12 +192,19 @@
                 </td>
 
                 <td>
-                    {{asistencia.descripcion}}
+                    <div *ngIf="asistencia?.descripcion !=null || asistencia?.descripcion !=''">
+                        {{asistencia.descripcion}}
+                    </div>
+
+                    <div *ngIf="asistencia?.descripcion ==null || asistencia?.descripcion ==''">
+                        -- Ninguna --
+                    </div>
+                    
                 </td>
 
                 <td>
-                    <button (click)="fijarAsistenciaJustificacion(asistencia)" class="btn btn-warning btn-sm color-white" data-toggle="modal"
-                        data-target="#staticBackdrop2">
+                    <button (click)="fijarAsistenciaJustificacion(asistencia)"
+                        class="btn btn-warning btn-sm color-white" data-toggle="modal" data-target="#staticBackdrop2">
                         Justificar
                     </button>
                 </td>
@@ -286,14 +298,23 @@
 
                 <p style="text-align:center">Para Proceder con la Justificación debe seleccionar una Jornada</p>
 
-                <label style="font-weight: bold;" for="jornada">Jornadas* :</label>
-                <select [(ngModel)]="configuracion" class="form-control" name="jornada"
-                    id="jornada">
-                    <option *ngFor="let jornada of configuraciones" [ngValue]="jornada">{{jornada.jornada}} {{jornada.hora_ingreso}} - {{jornada.hora_salida}}</option>
-                </select>
-                <span *ngIf="errorJustificacion" class="form-text text-danger msgError">
-                    Jornada: Debe seleccionar un jornada
-                  </span>
+                <div class="form-group">
+                    <label style="font-weight: bold;" for="jornada">Jornadas* :</label>
+                    <select [(ngModel)]="configuracion" class="form-control" name="jornada" id="jornada">
+                        <option *ngFor="let jornada of configuraciones" [ngValue]="jornada">{{jornada.jornada}}
+                            {{jornada.hora_ingreso}} - {{jornada.hora_salida}}</option>
+                    </select>
+                    <span *ngIf="errorJustificacion" class="form-text text-danger msgError">
+                        Jornada: Debe seleccionar un jornada
+                    </span>
+                </div>
+
+                <div class="form-group">
+                    <label style="font-weight: bold;" for="jornada">Observación :</label>
+                    <textarea [(ngModel)]="observacion" class="form-control" name="observacion" id="observacion">
+                </textarea>
+
+                </div>
 
 
                 <div class="modal-footer">

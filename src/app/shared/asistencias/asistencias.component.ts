@@ -35,6 +35,8 @@ export class AsistenciasComponent implements OnInit {
   empleadosFiltrados: Usuario[] = [];
   empleado: Usuario = new Usuario();
 
+  observacion: string = "";
+
 
   // ---- Asociado al input de busqueda-----
   @ViewChild('inputFilter') inputElementSearch;
@@ -61,6 +63,11 @@ export class AsistenciasComponent implements OnInit {
   }
 
   buscar() {
+
+    if (this.inicio > this.fin) {
+      this.toastr.error('La fecha de INICIO no puede ser mayor a la de FIN ', 'Error Fechas')
+      return;
+    }
 
     // Buscar por empleaod y fechas
     if (this.empleado?.id != null) {
@@ -177,6 +184,9 @@ export class AsistenciasComponent implements OnInit {
       let fechaFin = new Date(this.asistencia.fecha_registro);
       fechaFin.setHours(parseInt(this.configuracion.hora_salida.split(":")[0]), parseInt(this.configuracion.hora_salida.split(":")[1]));
       this.asistencia.fecha_salida = fechaFin;
+
+      this.asistencia.descripcion = this.observacion;
+
       this.asistenciaService.actualizar(this.asistencia).subscribe(resp => {
 
         let itemIndex = this.asistencias.findIndex(item => item.id == resp.id);
@@ -194,7 +204,7 @@ export class AsistenciasComponent implements OnInit {
         $('#staticBackdrop2').modal('hide');
         this.configuracion = new AsistenciaConfiguracion();
         this.asistencia = new Asistencia();
-
+        this.observacion = "";
       });
 
 
@@ -243,5 +253,23 @@ export class AsistenciasComponent implements OnInit {
   campoNoEsValido(campo: string) {
     return this.miFormulario.controls[campo].errors && this.miFormulario.controls[campo].touched;
   }
+
+  exportar() {
+    let id = 0;
+    if (this.empleado?.id != null) {
+      id = this.empleado.id;
+    }
+    this.asistenciaService.exportar(id, this.inicio, this.fin).subscribe((data) => {
+      let bloB = new Blob([data], { type: "application/vnd.ms-excel" });
+      var downloadURL = window.URL.createObjectURL(bloB);
+      var link = document.createElement('a');
+      link.href = downloadURL;
+      link.download = "asistencias.xls";
+  
+
+      link.click();
+    });
+  }
+
 
 }
