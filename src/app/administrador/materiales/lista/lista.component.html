@@ -1,0 +1,599 @@
+<h1 class="titulos"> Inventario</h1>
+
+<!-- Button trigger modal -->
+<button (click)="openModalMaterial()" type="button" class="btn btn-primary" data-toggle="modal"
+  data-target="#staticBackdrop">
+  <span class="fas fa-folder-plus"></span> Nuevo Material
+</button>
+
+
+<div style="position:relative;">
+  <div class="input-group mt-3">
+    <div class="input-group-prepend">
+      <span class="input-group-text" id="inputGroup-sizing-default">
+        <span class="fas fa-search"></span>
+      </span>
+    </div>
+    <input #inputFilter (keyup)="filtrarMateriales($event)" placeholder="Buscar por Código o Nombre" type="text"
+      class="form-control" aria-label="Default" aria-describedby="inputGroup-sizing-default">
+  </div>
+
+  <div style="position: absolute;width:100%;z-index: 99999; box-shadow: 5px 5px 5px black;" id="list-tab"
+    role="tablist">
+
+    <button type="button" (click)="fijarMaterialBusqueda(m)" *ngFor="let m of materialesFiltrados"
+      class="list-group-item list-group-item-action">
+      {{m.nombre}}
+    </button>
+
+  </div>
+</div>
+
+
+<div *ngIf="material.id!=null" class="row mt-3">
+
+  <div class="col-lg-7">
+    <div class="card">
+
+      <div class="card-header bg-info text-white">
+        DATOS DEL MATERIAL
+        <button (click)="fijarActualizacionMaterial(material)" class="btn btn-warning btn-sm float-right">
+          <span class="fas fa-edit"></span>
+          Editar
+        </button>
+
+      </div>
+
+      <div class="card-body">
+
+        <div>
+          <h6>
+            <span class="badge badge-pill badge-info">Nombre</span>
+          </h6>
+          <p>
+            {{material.nombre}}
+          </p>
+        </div>
+
+
+        <div>
+          <h6>
+            <span class="badge badge-pill badge-info">Código</span>
+          </h6>
+          <p>
+            {{material.codigo}}
+          </p>
+        </div>
+
+        <div>
+          <h6>
+            <span class="badge badge-pill badge-info">Descripción</span>
+          </h6>
+          <p>
+            {{material.descripcion}}
+          </p>
+        </div>
+
+        <div>
+          <h6>
+            <span class="badge badge-pill badge-info">Fecha de registro</span>
+          </h6>
+          <p>
+            {{material.fecha_creacion}}
+          </p>
+        </div>
+
+
+        <div>
+          <h6>
+            <span class="badge badge-pill badge-info">Tipo de Material</span>
+          </h6>
+          <p>
+            {{material.material_tipo.nombre}}
+          </p>
+        </div>
+
+
+        <div>
+          <h6>
+            <span class="badge badge-pill badge-primary">Cantidad Disponible</span>
+          </h6>
+          <p>
+            {{material.cantidad}}
+          </p>
+        </div>
+
+        <div>
+          <h6>
+            <span class="badge badge-pill badge-info">Unidad de Medida</span>
+          </h6>
+          <p>
+            {{material.material_unidad.nombre}}
+          </p>
+        </div>
+
+
+      </div>
+
+
+
+    </div>
+
+
+  </div>
+
+
+
+
+  <div class="col-lg-5">
+
+    <div class="card">
+
+      <div class="card-header bg-secondary text-white">
+        IMÁGENES
+
+        <button type="button" class="btn btn-primary float-right btn-sm" data-toggle="modal"
+          data-target="#staticBackdropImagenes">
+          <span class="fas fa-folder-plus"></span> Añadir Imagen
+        </button>
+
+      </div>
+
+      <div class="card-body">
+
+
+        <div *ngIf="material.files.length==0" class="alert alert-warning mt-3" role="alert">
+          No hay imágenes subidas
+        </div>
+
+        <table *ngIf="material.files.length!=0" class="table table-striped">
+
+          <thead>
+            <tr>
+              <th>Archivo</th>
+            </tr>
+          </thead>
+
+          <tbody>
+
+            <tr *ngFor="let archi of material.files">
+              <td style="text-align: center">
+                <img style="width: 150px;" *ngIf="!archi.id" [src]="archi.imgPreview" class="img-fluid">
+                <br>
+                <img style="width: 150px;" *ngIf="archi.id" [src]="urlBaseImg+archi.nombreArchivo" class="img-fluid">
+                <br>
+                <button (click)="eliminarImagenDB(archi)" type="button" class="btn btn-danger btn-sm mt-2">
+                  <span class="fas fa-trash-alt"></span>
+                </button>
+              </td>
+            </tr>
+          </tbody>
+
+        </table>
+      </div>
+    </div>
+
+  </div>
+
+
+
+
+  <!-- NUEVOS INGRESOS--->
+  <div class="col-lg-12 mt-2">
+
+    <div class="card">
+
+      <div class="card-header bg-primary text-white">
+        últimos ingresos del Producto - lote
+        <button (click)="fijarActualizacionMaterialIngreso()" class="btn btn-secondary btn-sm float-right">
+          <span class="fas fa-edit"></span>
+          Nuevo Ingreso
+        </button>
+
+      </div>
+
+      <div class="card-body">
+
+
+
+        <div *ngIf="materialesIngresos.length==0" class="alert alert-warning mt-3" role="alert">
+          No hay registros de ingresos recientes
+        </div>
+
+
+        <table *ngIf="materialesIngresos.length>0" class="table table-striped">
+
+          <thead>
+            <tr>
+
+              <th>Proveedor</th>
+              <th>Cantidad</th>
+
+              <th>Descripción</th>
+
+
+              <th>Fecha de Ingreso</th>
+
+              <th>Acciones</th>
+
+            </tr>
+
+
+          </thead>
+
+          <tbody>
+
+            <tr *ngFor="let ingreso of materialesIngresos">
+
+
+              <td>
+                <div *ngIf="ingreso?.proveedor!=null">{{ingreso?.proveedor?.nombre_empresa}}</div>
+                <div *ngIf="ingreso?.proveedor==null">-- Sin Proveedor --</div>
+              </td>
+
+              <td>
+                {{ingreso.cantidad_ingreso}}
+              </td>
+
+              <td>
+                {{ingreso.descripcion_ingreso}}
+              </td>
+
+              <td>
+                {{ingreso.fecha_ingreso}}
+              </td>
+
+              <td>
+                <button (click)="fijarIngreso(ingreso)" class="btn btn-primary btn-sm">
+                  <span class="fas fa-edit"></span> Editar
+                </button>
+
+                <button (click)="eliminar(ingreso)" class="btn btn-danger btn-sm">
+                  <span class="fas fa-trash-alt"></span> eliminar
+                </button>
+              </td>
+
+            </tr>
+
+          </tbody>
+
+        </table>
+
+
+      </div>
+
+
+
+    </div>
+  </div>
+
+
+</div>
+
+
+<div *ngIf="material.id==null" class="alert alert-warning mt-3" role="alert">
+  No ha realizado una búsqueda
+</div>
+
+
+
+
+
+
+
+<!-- -------- MODAL nuevo ingreso------------  -->
+<div class="modal fade" id="staticBackdropIngreso" data-backdrop="static" data-keyboard="false" tabindex="-1"
+  aria-labelledby="staticBackdropLabel" aria-hidden="true">
+  <div class="modal-dialog ">
+    <div class="modal-content">
+      <div class="modal-header text-center">
+        <h5 class="modal-title w-100 text-center" id="staticBackdropLabelIngreso">
+          {{materialIngreso==null? 'Nuevo Ingreso':'Editar Ingreso'}}
+        </h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+
+        <div class="form-group" style="position:relative;">
+          <label for="nombre">Proveedor:</label>
+
+          <div class="input-group mt-1">
+            <div class="input-group-prepend">
+              <span class="input-group-text" id="inputGroup-sizing-default">
+                <span class="fas fa-search"></span>
+              </span>
+            </div>
+            <input #inputFilterProveedorNI (keyup)="filtrarProveedores($event)" placeholder="Buscar por Código o Nombre"
+              type="text" class="form-control" aria-label="Default" aria-describedby="inputGroup-sizing-default">
+          </div>
+
+          <div style="position: absolute;width:100%;z-index: 99999; box-shadow: 5px 5px 5px black;" id="list-tab"
+            role="tablist">
+
+            <button type="button" (click)="fijarPreveedorBusqueda(p)" *ngFor="let p of proveedoresFiltrados"
+              class="list-group-item list-group-item-action">
+              {{p.nombre_empresa}} - {{p.representante}}
+            </button>
+          </div>
+        </div>
+
+
+        <form (ngSubmit)="guardarMaterialIngreso()" [formGroup]="miFormularioIngreso">
+
+          <div class="form-group">
+            <label for="cantidad">Material:</label>
+            <p class="font-weight-bold text-center">{{material.nombre}}</p>
+          </div>
+
+          <div class="form-group">
+            <label for="cantidad">Unidad de medida</label>
+            <p class="font-weight-bold text-center">{{material?.material_unidad?.nombre}}</p>
+          </div>
+
+
+          <div class="form-group">
+            <label for="cantidad">Cantidad:*</label>
+            <input formControlName="cantidad_ingreso" type="number" class="form-control" id="cantidad_ingreso"
+              name="cantidad_ingreso">
+            <span *ngIf="campoNoEsValidoIngreso('cantidad_ingreso')" class="form-text text-danger msgError">
+              Cantidad: Ingrese un valor numérico
+            </span>
+          </div>
+
+
+          <div class="form-group">
+            <label for="cedula">Descripción:*</label>
+            <textarea formControlName="descripcion_ingreso" type="text" class="form-control" id="descripcion_ingreso"
+              name="descripcion_ingreso">
+              </textarea>
+            <span *ngIf="campoNoEsValidoIngreso('descripcion_ingreso')" class="form-text text-danger msgError">
+              Descripcion: Campo Obligatorio
+            </span>
+          </div>
+
+
+          <div class="modal-footer">
+
+            <button [class.btn-warning]="isEdit!=0" class="btn btn-info btn-md">
+              <span class="fas fa-download"></span>
+
+              {{materialIngreso==null? 'Guardar':'Actualizar'}}
+            </button>
+
+
+
+            <button (click)="bloquearFiltro()" type="button" class="btn btn-danger" data-dismiss="modal">
+              <span class="fas fa-times-circle"></span> Cancelar
+            </button>
+
+          </div>
+
+        </form>
+
+
+      </div>
+    </div>
+  </div>
+</div>
+
+
+
+
+
+
+
+
+
+
+<!-- -------- MODAL DATOS MATERIAL------------  -->
+<div class="modal fade" id="staticBackdrop" data-backdrop="static" data-keyboard="false" tabindex="-1"
+  aria-labelledby="staticBackdropLabel" aria-hidden="true">
+  <div class="modal-dialog ">
+    <div class="modal-content">
+      <div class="modal-header text-center">
+        <h5 class="modal-title w-100 text-center" id="staticBackdropLabel">{{this.isEdit==0?'Nuevo Material' : ' Editar
+          Material'}}</h5>
+        <button (click)="resetMaterial()" type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+
+
+
+
+        <div *ngIf="banderaNM" class="form-group" style="position:relative;">
+          <label for="nombre">Proveedor:</label>
+
+          <div class="input-group mt-1">
+            <div class="input-group-prepend">
+              <span class="input-group-text" id="inputGroup-sizing-default">
+                <span class="fas fa-search"></span>
+              </span>
+            </div>
+            <input #inputFilterProveedorNuevoMaterial (keyup)="filtrarProveedores($event)"
+              placeholder="Buscar por Código o Nombre" type="text" class="form-control" aria-label="Default"
+              aria-describedby="inputGroup-sizing-default">
+          </div>
+
+          <div style="position: absolute;width:100%;z-index: 99999; box-shadow: 5px 5px 5px black;" id="list-tab"
+            role="tablist">
+
+            <button type="button" (click)="fijarPreveedorBusqueda(p)" *ngFor="let p of proveedoresFiltrados"
+              class="list-group-item list-group-item-action">
+              {{p.nombre_empresa}} - {{p.representante}}
+            </button>
+          </div>
+        </div>
+
+
+
+
+        <form (ngSubmit)="guardarOactualizar()" [formGroup]="miFormulario">
+          <div class="form-group">
+            <label for="codigo">Código:*</label>
+            <input formControlName="codigo" type="text" class="form-control" id="codigo" name="codigo">
+            <span *ngIf="campoNoEsValido('codigo')" class="form-text text-danger msgError">
+              Código: Campo Obligatorio
+            </span>
+          </div>
+
+          <div class="form-group">
+            <label for="apellidos">Nombre:*</label>
+            <input formControlName="nombre" type="text" class="form-control" id="nombre" name="nombre">
+            <span *ngIf="campoNoEsValido('nombre')" class="form-text text-danger msgError">
+              Nombre: Campo Obligatorio
+            </span>
+          </div>
+
+          <div class="form-group">
+            <label for="cedula">Descripción:</label>
+            <textarea formControlName="descripcion" type="text" class="form-control" id="descripcion" name="descripcion">
+            </textarea>
+            <span *ngIf="campoNoEsValido('descripcion')" class="form-text text-danger msgError">
+              Descripcion: Campo Obligatorio
+            </span>
+          </div>
+
+
+          <div class="form-group">
+            <label for="material_tipo">Tipo de Material:*</label>
+
+            <select formControlName="material_tipo" class="form-control" name="material_tipo" id="material_tipo">
+              <option value="">--- Seleccione un Tipo ---</option>
+              <option *ngFor="let tipo of tipos" [ngValue]="tipo">{{tipo.nombre}}</option>
+            </select>
+            <span *ngIf="campoNoEsValido('material_tipo')" class="form-text text-danger msgError">
+              Tipo de Material: Campo Obligatorio
+            </span>
+          </div>
+
+          <div class="form-group">
+            <label for="material_unidad">Unidad:*</label>
+
+            <select formControlName="material_unidad" class="form-control" name="material_unidad" id="material_unidad">
+              <option value="">--- Seleccione una Unidad ---</option>
+              <option *ngFor="let unidad of unidades" [ngValue]="unidad">{{unidad.nombre}}</option>
+            </select>
+            <span *ngIf="campoNoEsValido('material_unidad')" class="form-text text-danger msgError">
+              Unidad de Material: Campo Obligatorio
+            </span>
+          </div>
+
+          <div class="form-group">
+            <label for="cedula">Cantidad:*</label>
+            <input formControlName="cantidad" type="number" class="form-control" id="cantidad" name="cantidad">
+            <span *ngIf="campoNoEsValido('cantidad')" class="form-text text-danger msgError">
+              Cantidad: Ingrese un valor numérico
+            </span>
+          </div>
+
+          <div class="modal-footer">
+
+            <button [class.btn-warning]="isEdit!=0" class="btn btn-info btn-md">
+              <span class="fas fa-download"></span> {{ isEdit == 0 ?'Guardar':'Actualizar'}}
+            </button>
+
+
+
+            <button (click)="resetMaterial()" type="button" class="btn btn-danger" data-dismiss="modal">
+              <span class="fas fa-times-circle"></span> Cancelar
+            </button>
+
+          </div>
+
+        </form>
+
+
+      </div>
+    </div>
+  </div>
+</div>
+
+
+
+<!--  ----------- MODAL CARGAR IMAGEN ------------- -->
+
+<div class="modal fade" id="staticBackdropImagenes" data-backdrop="static" data-keyboard="false" tabindex="-1"
+  aria-labelledby="staticBackdropLabel" aria-hidden="true">
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content">
+      <div class="modal-header text-center">
+        <h5 class="modal-title w-100 text-center" id="staticBackdropLabel">CARGAR IMÁGENES</h5>
+        <button (click)="resetMaterial()" type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+
+
+        <div class="custom-file">
+          <input #inputFileImg (change)="seleccionarArchivo($event)" type="file" class="custom-file-input"
+            id="inputGroupFile01" aria-describedby="inputGroupFileAddon01">
+          <label class="custom-file-label" for="inputGroupFile01">Seleccionar Imágen</label>
+        </div>
+
+
+
+        <div *ngIf="archivos.length==0" class="alert alert-info mt-3" role="alert">
+          No ha seleccionado ninguna imagen
+        </div>
+
+        <h5 *ngIf="archivos.length!=0" class="m-4">Imágenes seleccionadas</h5>
+
+        <table *ngIf="archivos.length!=0" class="table table-striped">
+
+          <thead style="text-align: center">
+            <tr>
+              <th>Archivo</th>
+              <th>Nombre</th>
+              <th>Eliminar</th>
+            </tr>
+          </thead>
+
+          <tbody>
+
+            <tr *ngFor="let archi of archivos">
+              <td>
+                <img *ngIf="!archi.id" width="100" height="100" [src]="archi.imgPreview" class="img-fluid">
+                <img *ngIf="archi.id" width="100" height="100" [src]="urlBaseImg+archi.nombreArchivo" class="img-fluid">
+              </td>
+
+              <td>
+
+                <p colspan="2"> {{archi.nombreArchivo}}</p>
+
+
+              </td>
+
+              <td>
+                <button (click)="quitarImagenModal(archi)" type="button" class="btn btn-danger btn-xs">
+                  <span class="fas fa-trash-alt"></span>
+                </button>
+              </td>
+            </tr>
+          </tbody>
+
+        </table>
+
+
+        <div class="modal-footer">
+
+          <button (click)="subirImagenes()" class="btn btn-info btn-md">
+            <span class="fas fa-download"></span> Subir Imágenes
+          </button>
+
+
+
+          <button type="button" class="btn btn-danger" data-dismiss="modal">
+            <span class="fas fa-times-circle"></span> Cancelar
+          </button>
+
+        </div>
+
+      </div>
+    </div>
+  </div>
+</div>

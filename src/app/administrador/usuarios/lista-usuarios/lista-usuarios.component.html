@@ -1,0 +1,82 @@
+<h1 [class.text-danger]="banderaInactivos" class="titulos"> {{banderaInactivos? 'Usuarios Inactivos':'Usuarios Activos'}}</h1>
+
+<table class="table table-striped">
+
+    <thead>
+        <tr>
+            <th>
+                Nombres
+            </th>
+            
+
+            <th>
+                Apellidos
+            </th>
+
+            <th>
+                Correo
+            </th>
+
+            <th>
+                Celular
+            </th>
+
+            
+            <th>
+                Rol
+            </th>
+
+            <th>
+                Acciones
+            </th>
+
+       </tr>
+
+    </thead>
+
+    <tbody>
+
+        <tr *ngFor="let usuario of usuarios" >
+
+         
+            <td >
+                {{usuario.nombres}}
+            </td>
+
+            <td  >
+                {{usuario.apellidos}}
+            </td>
+
+            <td >
+                {{usuario.correo}}
+            </td>
+
+            <td >
+                {{usuario.celular}}
+            </td>
+
+            <td >
+                {{usuario.roles[0]?.etiqueta}}
+            </td>
+            
+            <td >
+                <button *ngIf="banderaInactivos==false" [routerLink]="['/admin/editar-usuario', usuario.id]" class="btn btn-info btn-sm">
+                    <span class="fas fa-user-edit"></span>
+                    Editar
+                </button>
+                <button *ngIf="banderaInactivos==false" (click)="inactivar(usuario)" class="btn btn-danger btn-sm">
+                    <span class="fas fa-times-circle"></span>
+                    Inactivar
+                </button>
+
+                <button *ngIf="banderaInactivos==true" (click)="activar(usuario)" class="btn btn-primary btn-sm">
+                    <span class="fas fa-user-check"></span>
+                    Activar
+                </button>
+            </td>
+    
+        </tr>
+
+    </tbody>
+
+</table>

@@ -1,0 +1,319 @@
+<h1 class="titulos"> Jornada Laboral</h1>
+
+<button type="button" class="btn btn-outline-primary mb-2" data-toggle="modal" data-target="#staticBackdrop">
+    Nueva Jornada
+</button>
+
+<table class="table table-striped">
+
+    <thead>
+        <tr>
+            <th>
+                Jornada
+            </th>
+            <th>
+                Hora de Entrada
+            </th>
+
+            <th>
+                Hora de Salida
+            </th>
+            <th>
+                Acciones
+            </th>
+        </tr>
+
+    </thead>
+
+    <tbody>
+
+        <tr *ngFor="let configuracion of configuraciones">
+
+            <td>
+                {{configuracion.jornada}}
+            </td>
+
+            <td>
+                {{configuracion.hora_ingreso}}
+            </td>
+
+            <td>
+                {{configuracion.hora_salida}}
+            </td>
+            <td>
+                <button (click)="fijarJornada(configuracion)" class="btn btn-primary btn-sm">
+                    <span class="fas fa-edit"></span>
+                    Editar
+                </button>
+
+                <button class="btn btn-danger btn-sm">
+                    <span class="fas fa-times-circle"></span>
+                    Eliminar
+                </button>
+            </td>
+
+        </tr>
+
+    </tbody>
+
+</table>
+
+
+
+<hr>
+<h1 class="titulos"> Asistencias</h1>
+
+<div class="card">
+
+    <div class="card-header bg-primary text-white">
+        Buscar
+    </div>
+
+    <div class="card-body">
+        <div class="form-group">
+
+            <label for="nombre">Empleado:</label>
+
+            <div class="input-group mt-1">
+                <div class="input-group-prepend">
+                    <span class="input-group-text" id="inputGroup-sizing-default">
+                        <span class="fas fa-search"></span>
+                    </span>
+                </div>
+                <input #inputFilter (keyup)="filtrarEmpleados($event)"
+                    placeholder="Buscar por Código o Nombre" type="text" class="form-control"
+                    aria-label="Default" aria-describedby="inputGroup-sizing-default">
+            </div>
+
+            <div style="position: absolute;width:100%;z-index: 99999; box-shadow: 5px 5px 5px black;"
+                id="list-tab" role="tablist">
+
+                <button type="button" (click)="fijarEmpleadosBusqueda(u)" *ngFor="let u of empleadosFiltrados"
+                    class="list-group-item list-group-item-action">
+                    {{u.apellidos}} {{u.nombres}}
+                </button>
+            </div>
+
+    
+        </div>
+
+        <div class="form-group">
+            <label>Buscar por Fechas</label>
+
+            <mat-form-field appearance="fill" class="w-100">
+                <mat-label>Desde</mat-label>
+                <input [(ngModel)]="inicio" matInput [matDatepicker]="picker1">
+                <mat-datepicker-toggle matSuffix [for]="picker1"></mat-datepicker-toggle>
+                <mat-datepicker #picker1></mat-datepicker>
+            </mat-form-field>
+
+            <mat-form-field appearance="fill" class="w-100">
+                <mat-label>Hasta</mat-label>
+                <input [(ngModel)]="fin" matInput [matDatepicker]="picker2">
+                <mat-datepicker-toggle matSuffix [for]="picker2"></mat-datepicker-toggle>
+                <mat-datepicker #picker2></mat-datepicker>
+            </mat-form-field>
+
+
+        </div>
+
+        <button (click)="buscar()" class="btn btn-info">
+            <span class="fas fa-search"></span> Buscar
+        </button>
+    </div>
+
+</div>
+
+<div class="alert alert-info mt-3" *ngIf="asistencias.length ==0">
+    {{texto}}
+</div>
+
+<div *ngIf="asistencias.length >0" class="mt-3">
+
+    <h4 class="text-left">Registros</h4>
+
+    <table class="table table-striped">
+
+        <thead>
+            <tr>
+                <th>
+                    Personal
+                </th>
+                <th>
+                    Fecha
+                </th>
+
+                <th>
+                    Hora de Entrada
+                </th>
+
+                <th>
+                    Hora de Salida
+                </th>
+
+                <th>
+                    Observaciones
+                </th>
+
+                <th>
+                    Acciones
+                </th>
+            </tr>
+
+        </thead>
+
+        <tbody>
+
+            <tr *ngFor="let asistencia of asistencias">
+
+                <td>
+
+                    {{asistencia.usuario.apellidos}} {{asistencia.usuario.nombres}}
+                </td>
+
+                <td>
+
+                    {{asistencia.fecha_registro | date:'EEEE, d MMM y'}}
+                </td>
+
+                <td>
+
+                    {{asistencia.fecha_ingreso | date:'HH:mm'}}
+                </td>
+
+                <td>
+
+                    {{asistencia.fecha_salida | date:'HH:mm'}}
+                </td>
+
+                <td>
+                    {{asistencia.descripcion}}
+                </td>
+
+                <td>
+                    <button (click)="fijarAsistenciaJustificacion(asistencia)" class="btn btn-warning btn-sm color-white" data-toggle="modal"
+                        data-target="#staticBackdrop2">
+                        Justificar
+                    </button>
+                </td>
+
+            </tr>
+
+        </tbody>
+
+    </table>
+</div>
+
+
+
+<!-- ----  MODAAAL JORNADA -----  -->
+<div class="modal fade" id="staticBackdrop" data-backdrop="static" data-keyboard="false" tabindex="-1"
+    aria-labelledby="staticBackdropLabel" aria-hidden="true">
+    <div class="modal-dialog ">
+        <div class="modal-content">
+            <div class="modal-header text-center">
+                <h5 style="font-size: 20px;" class="modal-title w-100 text-center" id="staticBackdropLabel">
+                    {{this.isEdit==0?'Nueva Jornada' : '
+                    Editar Jornada'}}</h5>
+                <button (click)="resetJornada()" type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+
+                <form (ngSubmit)="guardarOactualizar()" [formGroup]="miFormulario">
+                    <div class="form-group">
+                        <label for="codigo">Jornada:*</label>
+                        <input placeholder="Ejmplo: lunes a viernes" formControlName="jornada" type="text"
+                            class="form-control" id="jornada" name="jornada">
+                        <span *ngIf="campoNoEsValido('jornada')" class="form-text text-danger msgError">
+                            Jornada: Campo Obligatorio
+                        </span>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="hora_ingreso">Hora de ingreso:*</label>
+                        <br>
+                        <input type="time" formControlName="hora_ingreso" class="form-control">
+
+                    </div>
+
+                    <div class="form-group">
+                        <label for="hora_salida">Hora de salida:*</label>
+                        <br>
+                        <input type="time" formControlName="hora_salida" class="form-control">
+                    </div>
+
+
+                    <div class="modal-footer">
+
+                        <button [class.btn-warning]="isEdit!=0" class="btn btn-info btn-md">
+                            <span class="fas fa-download"></span> {{ isEdit == 0 ?'Guardar':'Actualizar'}}
+                        </button>
+
+
+
+                        <button type="button" class="btn btn-danger" data-dismiss="modal">
+                            <span class="fas fa-times-circle"></span> Cancelar
+                        </button>
+
+                    </div>
+
+                </form>
+
+
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+<!-- ----  JUSTIFICACIONS -----  -->
+<div class="modal fade" id="staticBackdrop2" data-backdrop="static" data-keyboard="false" tabindex="-1"
+    aria-labelledby="staticBackdropLabel2" aria-hidden="true">
+    <div class="modal-dialog ">
+        <div class="modal-content">
+            <div class="modal-header text-center">
+                <h5 style="font-size: 20px;" class="modal-title w-100 text-center" id="staticBackdropLabel2">Justificar
+                    Jornada</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+
+
+                <p style="text-align:center">Para Proceder con la Justificación debe seleccionar una Jornada</p>
+
+                <label style="font-weight: bold;" for="jornada">Jornadas* :</label>
+                <select [(ngModel)]="configuracion" class="form-control" name="jornada"
+                    id="jornada">
+                    <option *ngFor="let jornada of configuraciones" [ngValue]="jornada">{{jornada.jornada}} {{jornada.hora_ingreso}} - {{jornada.hora_salida}}</option>
+                </select>
+                <span *ngIf="errorJustificacion" class="form-text text-danger msgError">
+                    Jornada: Debe seleccionar un jornada
+                  </span>
+
+
+                <div class="modal-footer">
+
+                    <button (click)="justificar()" class="btn btn-info btn-md">
+                        <span class="fas fa-download"></span> Justificar
+                    </button>
+
+
+
+                    <button type="button" class="btn btn-danger" data-dismiss="modal">
+                        <span class="fas fa-times-circle"></span> Cancelar
+                    </button>
+
+                </div>
+
+
+
+
+            </div>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,77 @@
+<h1 class="titulos"> Roles</h1>
+
+<div class="row">
+
+    <div class="col-lg-5">
+        <form (ngSubmit)="guardarOactualizar()" autocomplete="of" [formGroup]="miFormulario">
+
+            <div class="card">
+                <div [class.bg-warning]="isEdit!=0" class="card-header bg-info text-white">
+                   {{isEdit!=0?'Actualizar Rol':'Nuevo Rol'}} 
+                </div>
+
+                <div class="card-body">
+
+                    <div class="form-group">
+                        <label for="nombre_empresa">Nombre del Rol:*</label>
+                        <input formControlName="etiqueta" type="text" class="form-control" id="etiqueta" name="etiqueta">
+                        <span *ngIf="campoNoEsValido('etiqueta')" class="form-text text-danger msgError">
+                            Nombre: Campo Obligatorio
+                        </span>
+                    </div>
+
+
+                    <button [class.bg-warning]="isEdit!=0" type="submit" class="btn btn-success w-100">
+                        <span class="fas fa-download"></span>
+                        {{isEdit==0 ? 'Guardar' : 'Actualizar'}}
+
+                    </button>
+
+                </div>
+            </div>
+
+        </form>
+    </div>
+
+    <div class="col-lg-7">
+        <div class="card">
+            <div class="card-header bg-primary text-white">
+               Roles
+               
+            </div>
+
+            <div class="card-body">
+
+
+                <table class="table table-striped">
+
+                    <thead>
+                        <tr>
+                            <th>Nombre</th>
+                            <th>Acciones</th>
+                        </tr>
+                    </thead>
+
+                    <tbody>
+                        <tr *ngFor="let rol of roles">
+                            <td>
+                                {{rol.etiqueta}}
+                            </td>
+                            <td>
+                                <button (click)="fijarEdicion(rol)" class="btn btn-secondary btn-sm">
+                                    <span class="fas fa-edit"></span> Editar
+                                </button>
+                            </td>
+                        </tr>
+                    </tbody>
+
+
+
+                </table>
+
+
+            </div>
+        </div>
+    </div>
+
+</div>

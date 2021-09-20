@@ -1,0 +1,274 @@
+<h1 class="titulos"> {{isEdit>0 ? 'Editar Producto - Pedido' : 'Nuevo Producto - Pedido'}}</h1>
+
+<form (ngSubmit)="guardarOactualizar()" autocomplete="of" [formGroup]="miFormulario">
+
+
+    <div class="row">
+
+        <div class="col-lg-6">
+            <div class="card">
+                <div class="text-white bg-primary card-header">
+                    Datos del Producto - Pedido
+                </div>
+                <div class="card-body">
+
+
+                    <div class="custom-control custom-switch text-center mb-2">
+                        <input #clienteInput (change)="onCheckboxChangeCliente($event)"  type="checkbox"
+                            class="custom-control-input" id="customSwitch2">
+                        <label class="custom-control-label" for="customSwitch2">Pedido por cliente</label>
+                    </div>
+
+
+                    <div *ngIf="activarCliente" class="form-group" style="position:relative;">
+                        <label for="nombre">Cliente:</label>
+
+                        <div class="input-group mt-1">
+                            <div class="input-group-prepend">
+                                <span class="input-group-text" id="inputGroup-sizing-default">
+                                    <span class="fas fa-search"></span>
+                                </span>
+                            </div>
+                            <input formControlName="us" #inputFilter (keyup)="filtrarClientes($event)"
+                                placeholder="Buscar por Código o Nombre" type="text" class="form-control"
+                                aria-label="Default" aria-describedby="inputGroup-sizing-default">
+                        </div>
+
+                        <div style="position: absolute;width:100%;z-index: 99999; box-shadow: 5px 5px 5px black;"
+                            id="list-tab" role="tablist">
+
+                            <button type="button" (click)="fijarClientesBusqueda(u)" *ngFor="let u of usuariosFiltrados"
+                                class="list-group-item list-group-item-action">
+                                {{u.apellidos}} {{u.nombres}}
+                            </button>
+                        </div>
+                    </div>
+
+
+
+
+
+
+                    <div class="form-group">
+                        <label for="nombre">Nombre del Producto:*</label>
+                        <input formControlName="nombre" type="text" class="form-control" id="nombre" name="nombre">
+                        <span *ngIf="campoNoEsValido('nombre')" class="form-text text-danger msgError">
+                            Nombre: Campo Obligatorio
+                        </span>
+                    </div>
+
+
+                    <div class="form-group">
+                        <label for="producto_tipo">Tipo de Producto:*</label>
+
+                        <select formControlName="producto_tipo" class="form-control" name="producto_tipo"
+                            id="producto_tipo">
+                            <option value="">--- Seleccione un Tipo ---</option>
+                            <option *ngFor="let tipo of tipos" [ngValue]="tipo">{{tipo.nombre}}</option>
+                        </select>
+                        <span *ngIf="campoNoEsValido('producto_tipo')" class="form-text text-danger msgError">
+                            Tipo de Producto: Campo Obligatorio
+                        </span>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="cantidad">Cantidad:*</label>
+                        <input formControlName="cantidad" type="number" class="form-control" id="cantidad"
+                            name="cantidad">
+                        <span *ngIf="campoNoEsValido('cantidad')" class="form-text text-danger msgError">
+                            Cantidad: Ingrese un valor numérico
+                        </span>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="precio">Precio:</label>
+                        <input formControlName="precio" type="number" class="form-control" id="precio" name="precio">
+                    </div>
+
+
+                    <div class="form-group">
+                        <label for="representante">Descripción:</label>
+                        <textarea cols="20" rows="5" formControlName="descripcion" type="text" class="form-control"
+                            id="descripcion" name="descripcion">
+                            </textarea>
+
+
+                    </div>
+
+
+                </div>
+
+            </div>
+        </div>
+
+
+
+        <div class="col-lg-6">
+
+
+            <div class="card">
+                <div class="text-white bg-primary card-header">
+                    Dirección de Entrega
+                </div>
+                <div class="card-body" formGroupName="direccion_entrega">
+
+
+
+                    <div *ngIf="archivos.length==0" class="alert alert-info mt-3" role="alert">
+                        En caso de haber acordado un punto de entrega, activar la opción <strong> Fijar Punto de
+                            Entrega</strong>
+                    </div>
+
+                    <div class="custom-control custom-switch text-center">
+                        <input #entrega (change)="onCheckboxChangeEntrega($event)"  type="checkbox"
+                            class="custom-control-input" id="customSwitch1">
+                        <label class="custom-control-label" for="customSwitch1">Fija punto de entrega</label>
+                    </div>
+
+                    
+                    <div *ngIf="activarEntrega || producto?.direccion_entrega?.id!=null">
+
+                        <div class="form-group">
+                            <label for="provincia">Provincia:*</label>
+                            <input #box (keyup)="buscarProvincia(box.value)" formControlName="provincia" type="text"
+                                class="form-control" id="provincia" name="provincia">
+
+                            <span *ngIf="campoNoValidoDireccion('direccion_entrega.provincia')"
+                                class="form-text text-danger msgError">
+                                Provincia: Campo Obligatorio
+                            </span>
+
+                        </div>
+
+                        <div class="form-group">
+                            <label for="ciudad">Ciudad o Cantón:*</label>
+                            <input #canton (keyup)="buscarCanton(canton.value)" formControlName="ciudad" type="text"
+                                class="form-control" id="ciudad" name="ciudad">
+                    
+                        </div>
+
+                        <div id="geocoder" class="geocoder"></div>
+
+                    </div>
+
+                    <div id="mapa" [class.dimensionesMapa]="activarEntrega"  #mapa>
+
+                    </div>
+
+                    <div *ngIf="activarEntrega">
+                        <div style="width:100%">
+                            <div>
+
+                                <div class="float-left">
+                                    Zoom:{{zoomLevel | number:'2.0-1'}}
+                                </div>
+
+                                <div class="float-right">
+                                    Lng,Lat: [{{center[0] | number:'2.4-4' }}, {{center[1] | number:'2.4-4'}}]
+                                </div>
+
+                                <input style="width:100%" type="range" class="form-range" [value]="zoomLevel" min="0"
+                                    max="18" #zoomInput (input)="zoomCambio(zoomInput.value)">
+
+                                <button (click)="zoomOut()" type="button" class="btn btn-primary btn-sm">
+                                    -
+                                </button>
+
+                                <button (click)="zoomIn()" type="button" class="btn btn-primary float-right btn-sm">
+                                    +
+                                </button>
+
+                            </div>
+
+                        </div>
+
+
+                    </div>
+
+
+                </div>
+            </div>
+        </div>
+
+        <div class="col-12 mt-4">
+
+            <div class="card">
+                <div class="card-header text-white bg-info">
+                    Imágenes (Opcional)
+
+                </div>
+
+                <div class="card-body">
+
+                    <div class="custom-file">
+                        <input #inputFileImg (change)="seleccionarArchivo($event)" type="file" class="custom-file-input"
+                            id="inputGroupFile01" aria-describedby="inputGroupFileAddon01">
+                        <label class="custom-file-label" for="inputGroupFile01">Seleccionar Imágen</label>
+                    </div>
+
+
+
+                    <div *ngIf="archivos.length==0" class="alert alert-info mt-3" role="alert">
+                        No ha seleccionado ninguna imagen
+                    </div>
+
+                    <h5 *ngIf="archivos.length!=0" class="m-4">Imágenes seleccionadas</h5>
+
+                    <table *ngIf="archivos.length!=0" class="table table-striped">
+
+                        <thead style="text-align: center">
+                            <tr>
+                                <th>Archivo</th>
+                                <th>Nombre</th>
+                                <th>Eliminar</th>
+                            </tr>
+                        </thead>
+
+                        <tbody>
+
+                            <tr *ngFor="let archi of archivos">
+                                <td>
+                                    <img style="width: 150px;" *ngIf="!archi.id" [src]="archi.imgPreview" class="img-fluid">
+                                    <br>
+                                    <img style="width: 150px;" *ngIf="archi.id" [src]="urlBaseImg+archi.nombreArchivo" class="img-fluid">
+                                    <br>
+                                    <button (click)="eliminarImagenDB(archi)" type="button" class="btn btn-danger btn-sm mt-2">
+                                      <span class="fas fa-trash-alt"></span>
+                                    </button>
+                                </td>
+
+                                <td>
+
+                                    <p colspan="2"> {{archi.nombreArchivo}}</p>
+
+
+                                </td>
+                                <!--
+                            <td>
+                              <button (click)="quitarImagenModal(archi)" type="button" class="btn btn-danger btn-xs">
+                                <span class="fas fa-trash-alt"></span>
+                              </button>
+                            </td>
+                            -->
+                            </tr>
+                        </tbody>
+
+                    </table>
+
+
+                </div>
+
+            </div>
+
+        </div>
+
+        <button type="submit" class="btn btn-success m-4 w-100">
+            <span class="fas fa-download"></span>
+            {{isEdit > 0 ? 'Actualizar' : 'Guardar'}}
+
+        </button>
+
+    </div>
+
+
+</form>

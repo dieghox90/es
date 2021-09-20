@@ -1,0 +1,16 @@
+label{
+    font-weight: bold;
+}
+
+hr{
+    border-color: #007bff;margin-top: -10px;margin-bottom: -15px;
+}
+
+.dato{
+    text-align:center;
+    width:100%
+}
+
+#cardDireccion hr{
+    border-color: #17a2b8;margin-top: -10px;margin-bottom: -15px;
+}

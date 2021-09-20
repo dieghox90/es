@@ -1,0 +1,14 @@
+
+/* -------- MENSAJES DE ERROR --------*/
+.msgError{
+    font-size: 13px;
+}
+
+/* -------- PARA TITULOS Y SUBTITULOS --------*/
+.titulos{
+    text-align: center;
+    padding: 15px;
+}
+
+html, body { height: 100%; }
+body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }

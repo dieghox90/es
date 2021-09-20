@@ -1,0 +1,55 @@
+<h1 class="titulos"> {{cliente==true ? 'Mis Pedidos': 'Listado de Productos - Pedidos'}} </h1>
+
+<div *ngIf="productos.length==0" class="alert alert-warning mt-3" role="alert">
+    Aún no ha realizado ningún pedido o compra
+  </div>
+
+<table *ngIf="productos.length>0" class="table table-striped">
+
+    <thead>
+        <tr>
+            <td>Foto</td>
+            <td>Producto</td>
+            <td>Tipo</td>
+            <td *ngIf="!authService.hasRole('ROLE_CLIENTE')" >Cliente</td>
+            <td *ngIf="authService.hasRole('ROLE_CLIENTE')" >Descripción</td>
+            <td *ngIf="!authService.hasRole('ROLE_CLIENTE')">Acciones</td>
+        </tr>
+    </thead>
+
+    <tbody>
+
+        <tr *ngFor="let producto of productos">
+
+            <td>
+                <img *ngIf="producto.files.length>0" style="width: 120px;"  [src]="urlBaseImg+producto.files[0]?.nombreArchivo" class="img-fluid">
+                <img *ngIf="producto.files.length==0" style="width: 120px;"  src="{{'/assets/img/no.png'}}" class="img-fluid">
+            </td>
+
+            <td>
+                {{producto.nombre}}
+            </td>
+
+            <td>
+                {{producto.producto_tipo.nombre}}
+            </td>
+
+            <td  *ngIf="authService.hasRole('ROLE_CLIENTE')" >
+                {{producto.descripcion}}
+            </td>
+
+            <td *ngIf="!authService.hasRole('ROLE_CLIENTE')">
+                <p *ngIf="producto?.usuario !=null">{{producto?.usuario?.apellidos}} {{producto?.usuario?.nombres}}</p>
+                <p *ngIf="producto?.usuario ==null">-- sin pedido --</p>
+            </td>
+            <td  *ngIf="!authService.hasRole('ROLE_CLIENTE')">
+                <button [routerLink]="['/shared/editar-producto', producto.id]" class="btn btn-primary">
+                    <span class="fas fa-edit"></span>
+                </button>
+            </td>
+
+        </tr>
+
+    </tbody>
+
+</table>

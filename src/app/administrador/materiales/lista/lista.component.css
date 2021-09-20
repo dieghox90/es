@@ -1,0 +1,10 @@
+#list-tab{
+    max-height: 250px;
+    margin-bottom: 10px;
+    overflow-y:scroll;
+    -webkit-overflow-scrolling: touch;
+}
+
+.custom-file-input ~ .custom-file-label::after {
+    content: "Buscar";
+}
