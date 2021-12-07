@@ -50,8 +50,7 @@ const routes: Routes = [
         path: 'material-unidad',
         component: MaterialUnidadComponent
       },
-      {
-        path: 'material-tipo',
+      { path: 'material-tipo',
         component: MaterialTipoComponent
       },
       {
@@ -65,7 +64,6 @@ const routes: Routes = [
     ]
   }
 ]
-
 @NgModule({
   imports: [
     RouterModule.forChild(routes)
