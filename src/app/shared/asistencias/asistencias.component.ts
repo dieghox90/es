@@ -1,6 +1,7 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { ToastrService } from 'ngx-toastr';
+import { AuthService } from 'src/app/login/Services/auth.service';
 import { Asistencia } from 'src/app/Models/asistencia';
 import { Usuario } from 'src/app/Models/usuario';
 import { AsistenciaService } from 'src/app/Services/asistencia.service';
@@ -37,6 +38,8 @@ export class AsistenciasComponent implements OnInit {
 
   observacion: string = "";
 
+  index : string | any = sessionStorage.getItem('index') ;
+
 
   // ---- Asociado al input de busqueda-----
   @ViewChild('inputFilter') inputElementSearch;
@@ -51,7 +54,8 @@ export class AsistenciasComponent implements OnInit {
 
   constructor(private asistenciaService: AsistenciaService,
     private fb: FormBuilder,
-    private toastr: ToastrService) {
+    private toastr: ToastrService,
+    public authService: AuthService) {
     this.configuracion = new AsistenciaConfiguracion();
   }
 
@@ -68,6 +72,11 @@ export class AsistenciasComponent implements OnInit {
       this.toastr.error('La fecha de INICIO no puede ser mayor a la de FIN ', 'Error Fechas')
       return;
     }
+
+    if (this.authService?.hasRole('ROLE_EMPLEADO')) { 
+      this.empleado.id = this.index;
+    }
+    
 
     // Buscar por empleaod y fechas
     if (this.empleado?.id != null) {
@@ -269,6 +278,35 @@ export class AsistenciasComponent implements OnInit {
 
       link.click();
     });
+  }
+
+
+  eliminar(configuracion: AsistenciaConfiguracion) { 
+
+    Swal.fire({
+      title: "Eliminación",
+      html: "¿Desea eliminar la jornada a <strong>" + configuracion.jornada + "</strong>?",
+      icon: "warning",
+      showCancelButton: true,
+      confirmButtonColor: "#3085d6",
+      cancelButtonColor: "#d33",
+      confirmButtonText: "SI"
+    }).then(result => {
+      if (result.value) {
+
+        this.asistenciaService.eliminar(configuracion.id).subscribe(resp => { 
+          this.configuraciones=this.configuraciones.filter(c => configuracion.id != c.id);
+          Swal.fire({
+            title: "Eliminación: ",
+            html: "Jornada eliminada con éxito",
+            icon: "success"
+          });
+        });
+      }
+    });
+
+
+   
   }
 
 

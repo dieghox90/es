@@ -66,6 +66,10 @@ export class AsistenciaService {
     return this.http.get<any>(this.baseUrl + "/asistencias/export", { params: params, responseType: 'blob' as 'json' });
   }
 
+  public eliminar(id: number): Observable<any> {
+    return this.http.delete<any>(this.baseUrl + "/asistencias/configuraciones/" + id);
+  }
+
   // ------------------ ASISTENCIAS CONFIGURACIONES------------
 
   agregarConfiguracion(asistencia: AsistenciaConfiguracion): Observable<AsistenciaConfiguracion> {

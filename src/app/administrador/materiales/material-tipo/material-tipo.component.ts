@@ -52,6 +52,13 @@ export class MaterialTipoComponent implements OnInit {
 
   // ----- Para actualizr o guardar -----
     
+    for (let index = 0; index < this.tipos.length; index++) {
+      if (this.tipos[index].nombre.toLocaleLowerCase().replace(/\s/g, "") == this.materialTipo.nombre.toLocaleLowerCase().replace(/\s/g, "")) { 
+        this.toastr.error('Ya existe un tipo con ese nombre', 'Error')
+        return;
+      }
+    }
+    
     
     if (this.isEdit) {
       //----- -ACTUALIZAMOS-------

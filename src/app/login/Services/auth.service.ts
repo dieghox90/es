@@ -114,13 +114,23 @@ export class AuthService {
     this.localService.clearToken();
   }
 
-  hasRole(role: String): boolean {
-    if (this.usuario?.rolesAuth?.includes(role)) {
-      return true;
-    }
+  hasRole(role: string): boolean {
+    let bandera = false;
 
-    return false;
-  }
+   this.usuario?.rolesAuth.forEach(r => {
+
+     if (r.includes(role)) {
+       bandera= true;
+     }
+     
+   });
+/*
+   if (this.usuario?.rolesAuth?.includes(role)) {
+     return true;
+   }
+*/
+   return bandera;
+ }
 
 
 }

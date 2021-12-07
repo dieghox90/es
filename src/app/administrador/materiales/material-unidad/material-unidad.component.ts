@@ -50,6 +50,13 @@ export class MaterialUnidadComponent implements OnInit {
 
   // ----- Para actualizr o guardar -----
     
+  for (let index = 0; index < this.unidades.length; index++) {
+    if (this.unidades[index].nombre.toLocaleLowerCase().replace(/\s/g, "") == this.materialUnidad.nombre.toLocaleLowerCase().replace(/\s/g, "")) { 
+      this.toastr.error('Ya existe una Unidad con ese nombre', 'Error')
+      return;
+    }
+  }
+    
     if (this.isEdit) {
       //----- -ACTUALIZAMOS-------
       this.materialUnidad.id = this.isEdit;

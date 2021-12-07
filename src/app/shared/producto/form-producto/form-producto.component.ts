@@ -138,8 +138,12 @@ export class FormProductoComponent implements OnInit, AfterViewInit  {
         this.producto = p;
 
        // this.usuario = p.usuario;
-   
-       console.log("NGONINIT");
+        
+        if (this.producto?.usuario != null) { 
+          this.usuario = new Usuario();
+          this.usuario = this.producto?.usuario;
+        }
+        
        console.log(this.producto)
           this.archivos = p.files;
         

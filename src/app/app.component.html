@@ -98,7 +98,12 @@
         <li nz-menu-item nzMatchRouter>
           <a routerLink="/shared/listar-productos"><span class="fa fa-tshirt"></span> Mis compras </a>
         </li>
+      </ul>
 
+      <ul *ngIf="authService?.hasRole('ROLE_EMPLEADO')">
+        <li nz-menu-item nzMatchRouter>
+          <a routerLink="/shared/asistencias"> <span class="fa fa-calendar-alt"></span> Asistencias</a>
+        </li>
       </ul>
 
     </ul>

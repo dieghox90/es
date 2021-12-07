@@ -1,6 +1,6 @@
 <h1 class="titulos"> Jornada Laboral</h1>
 
-<button type="button" class="btn btn-outline-primary mb-2" data-toggle="modal" data-target="#staticBackdrop">
+<button *ngIf="authService?.hasRole('ROLE_ADMINISTRADOR')" type="button" class="btn btn-outline-primary mb-2" data-toggle="modal" data-target="#staticBackdrop">
     Nueva Jornada
 </button>
 
@@ -18,7 +18,7 @@
             <th>
                 Hora de Salida
             </th>
-            <th>
+            <th *ngIf="authService?.hasRole('ROLE_ADMINISTRADOR')">
                 Acciones
             </th>
         </tr>
@@ -40,13 +40,13 @@
             <td>
                 {{configuracion.hora_salida}}
             </td>
-            <td>
+            <td *ngIf="authService?.hasRole('ROLE_ADMINISTRADOR')">
                 <button (click)="fijarJornada(configuracion)" class="btn btn-primary btn-sm">
                     <span class="fas fa-edit"></span>
                     Editar
                 </button>
 
-                <button class="btn btn-danger btn-sm">
+                <button (click)="eliminar(configuracion)" class="btn btn-danger btn-sm">
                     <span class="fas fa-times-circle"></span>
                     Eliminar
                 </button>
@@ -70,7 +70,7 @@
     </div>
 
     <div class="card-body">
-        <div class="form-group">
+        <div class="form-group" *ngIf="authService?.hasRole('ROLE_ADMINISTRADOR')">
 
             <label for="nombre">Empleado:</label>
 
@@ -134,7 +134,7 @@
 
     <h1 class="text-left">Registros</h1>
 
-    <button class="btn btn-success btn-sm float-right mb-3" (click)="exportar()"> <i class="fas fa-file-excel"></i>
+    <button *ngIf="authService?.hasRole('ROLE_ADMINISTRADOR')" class="btn btn-success btn-sm float-right mb-3" (click)="exportar()"> <i class="fas fa-file-excel"></i>
         Exportar Asistencias</button>
 
     <table class="table table-striped">
@@ -160,7 +160,7 @@
                     Observaciones
                 </th>
 
-                <th>
+                <th class="form-group" *ngIf="authService?.hasRole('ROLE_ADMINISTRADOR')">
                     Acciones
                 </th>
             </tr>
@@ -202,7 +202,7 @@
                     
                 </td>
 
-                <td>
+                <td class="form-group" *ngIf="authService?.hasRole('ROLE_ADMINISTRADOR')">
                     <button (click)="fijarAsistenciaJustificacion(asistencia)"
                         class="btn btn-warning btn-sm color-white" data-toggle="modal" data-target="#staticBackdrop2">
                         Justificar
@@ -236,7 +236,7 @@
                 <form (ngSubmit)="guardarOactualizar()" [formGroup]="miFormulario">
                     <div class="form-group">
                         <label for="codigo">Jornada:*</label>
-                        <input placeholder="Ejmplo: lunes a viernes" formControlName="jornada" type="text"
+                        <input placeholder="Ejemplo: lunes a viernes" formControlName="jornada" type="text"
                             class="form-control" id="jornada" name="jornada">
                         <span *ngIf="campoNoEsValido('jornada')" class="form-text text-danger msgError">
                             Jornada: Campo Obligatorio

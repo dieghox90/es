@@ -1,5 +1,6 @@
 import { DatePipe } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
+import { AuthService } from 'src/app/login/Services/auth.service';
 import { Asistencia } from 'src/app/Models/asistencia';
 import { Usuario } from 'src/app/Models/usuario';
 import { AsistenciaService } from 'src/app/Services/asistencia.service';
@@ -20,7 +21,8 @@ export class WelcomeComponent implements OnInit {
 
   public datePipe: DatePipe;
 
-  constructor(private asistenciaService: AsistenciaService) {
+  constructor(private asistenciaService: AsistenciaService,
+    public authService: AuthService) {
     this.asistencia = new Asistencia();
     this.asistencia.usuario = new Usuario();
   }
