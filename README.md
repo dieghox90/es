@@ -1,5 +1,7 @@
 # Software de Manufacturación
 
+Este sistema ha sido construido con los framework Angular y Spring Boot, tiene la funcionalidad de administrar la parte de producción, gestión y control de las prendas de vestir de la pequeña empresa de Ropa Deportiva llamada Elegant Sprot, ubicada en la provincia de Zamora Chinchipe.
+
 This project was generated with [Angular CLI](https://github.com/angular/angular-cli) version 12.2.0.
 
 ## Development server
